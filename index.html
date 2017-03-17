@@ -1,0 +1,119 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+ 
+  <link rel="stylesheet" href="main.css">
+   <link href="angular-moment-picker.min.css" rel="stylesheet">
+</head>
+<body>
+
+<md-content class="md-padding" layout-xs="column" layout="row" layout-align="center center">
+    <div flex="10" layout="row" layout-align="center">
+        <md-card flex="50">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline" >Data Send </span>
+                </md-card-title-text>
+            </md-card-title>
+
+
+
+ <md-card-content >
+<form name="myForm" ng-app="BlankApp" ng-controller="myController" class="container-fluid">
+<div class="md-padding" layout-align="center">
+  <div layout="row">
+      <md-input-container flex="50">
+        <md-select name="myselect" id="myselect" placeholder="Select Admin Name" ng-model="obj.adminName" ng-required="true">
+          <md-option ng-repeat="admin in adminsName" ng-value="admin">{{admin}}</md-option>
+        </md-select>
+      </md-input-container>
+   
+    </div>
+     <div layout="row">
+     <div>
+     	<span>Time From : </span>
+     	<md-input-container md-no-float>
+        <input moment-picker="ctrl.timepicker" ng-model="obj.timefrom" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Select date and time">
+     	</md-input-container>
+     	</div>
+     <div >
+     	<span>Time To : </span>
+     	<md-input-container md-no-float>
+        <input moment-picker="ctrl.timepicker" ng-model="obj.timeto" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Select date and time">
+     	</md-input-container>
+     	</div>
+     	
+	 
+    </div>
+   <div layout="row">
+    
+          <md-checkbox ng-model="obj.typeOfWork" aria-label="Checkbox 1">Reporting Live</md-checkbox>
+          <md-checkbox ng-model="data.cb2" aria-label="Checkbox 2"> HomeWork </md-checkbox>
+          
+      
+    </div>
+  <div layout="row">
+    <md-input-container >
+          <label>Client Name</label>
+          <input md-maxlength="30" required name="name" ng-model="obj.clientName" />
+          <div class="hint">Tell us what we should call you!</div>
+    </md-input-container>
+
+      <md-input-container flex="50">
+          <label>Subject Name</label>
+          <md-select name="type" ng-model="obj.subjectName" ng-required="true" >
+            <md-option ng-repeat="subName in subjectNameArray" ng-value="subName">{{subName}}</md-option>
+          </md-select>
+        </md-input-container>
+   </div>
+    
+     
+    
+     <div layout="row">
+	    <md-input-container flex="50" >
+	          <label>Book Name </label>
+	          <input md-maxlength="100"  name="name" ng-model="obj.bookName" />
+	          <div class="hint">Tell us where to read!</div>
+	    </md-input-container>
+    
+    
+      &#8377;
+	    <md-input-container >
+	          <label>Amount </label>
+	          <input  type="number" step="100" ng-model="obj.amount" />
+	          <div class="hint">How much to pay!</div>
+	    </md-input-container>
+	</div>     
+   
+
+
+  
+  </div>
+  <md-button type="button" ng-click="reset()">RESET</md-button>
+  <md-button class="md-primary" ng-disabled="myForm.$invalid" ng-click="submit()">SUBMIT</md-button>
+  </div>
+</form>
+</md-card-content>
+
+
+
+        </md-card>
+    </div>
+</md-content>
+
+      
+
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+  <script src="angular-moment-picker.min.js"></script>
+  
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript" src="index.js"></script>    
+  
+</body>
+</html>
