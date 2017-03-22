@@ -20,4 +20,9 @@ md-input-container > md-radio-group > md-radio-button {
     line-height: 14px;
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
     /* Set our own color */
-    color: grey; }    
+    color: grey; }
+
+.currencyinput {
+    padding-left: 25px;
+  
+}        
