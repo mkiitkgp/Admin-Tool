@@ -3,17 +3,53 @@ MyNameSpace.helpers = {
 	// functions written here
 }
 
-var app = angular.module('BlankApp', ['ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages','moment-picker']);
+var app = angular.module('BlankApp', ['ngRoute','ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages','moment-picker']);
+
+app.config(['$routeProvider',
+    function($routeProvider) {
+        $routeProvider.
+        when('/adddeals', {
+            templateUrl: 'snapqaTemplate/adddeals.html',
+            controller: 'addDealsController'
+        }).
+        when('/viewdeals', {
+            templateUrl: 'snapqaTemplate/viewdeals.html',
+            controller: 'viewdealsController'   
+        }).
+        otherwise({
+            redirectTo: '/adddeals'
+        });
+    }
+]);
+app.config(function ($mdThemingProvider) {
+    $mdThemingProvider.theme('red')
+      .primaryPalette('red');
+
+    $mdThemingProvider.theme('blue')
+      .primaryPalette('blue');
+
+  });
+
+app.service("ViewDealsService", function($http, $q) {
+    var deferred = $q.defer();
+    $http.get("deals.json").then(function(data) {
+        deferred.resolve(data);
+    })
+
+    this.getService = function() {
+        return deferred.promise;
+    }
+});
 
 
-app.controller('myController', function ($scope,$mdDialog, $http , $rootScope) {
+app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootScope) {
 
 	$scope.adminsName = ["Haardik" , "Lather","Ankit","Vishal"];
 
 	$scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
 	$scope.examType = ["Exam","Quiz","Final Exam","Pop Quiz"];
 
-	$rootScope.reportingLiveCheckBox = false;
+	$rootScope.reportingLiveCheckBox = true;
 	$rootScope.HomeworkCheckBox = false;
 	$rootScope.numberOfReviewsTextBox = 0;
 	$scope.reviewRequired= [];
@@ -120,6 +156,10 @@ app.controller('myController', function ($scope,$mdDialog, $http , $rootScope) {
     	$scope.obj.numberOfTutor = $scope.numberOfTutor;
     	$scope.obj.ratingArray =[];
     	$scope.obj.ratingArray = $scope.reviewRequired;
+        $scope.obj.typeOfDeal=[];
+
+        $scope.obj.typeOfDeal.push({name:"Reporting Live",value:$scope.radioGroup});
+        $scope.obj.typeOfDeal.push({name:"HomeWork",value:!$scope.radioGroup});
     	console.log($scope.obj);
     	//console.log($scope.reviewRequired);
 
@@ -134,3 +174,81 @@ app.controller('myController', function ($scope,$mdDialog, $http , $rootScope) {
 
 
   });
+
+app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialog,ViewDealsService) {
+
+    
+    var lookup = ViewDealsService.getService();
+    lookup.then(function(data) {
+        $rootScope.raw_data = data.data; // whole data
+        console.log($rootScope.raw_data);
+
+    });
+
+    $scope.showAdvanced = function(ev, data) {
+        console.log("coming inside ");
+    $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'snapqaTemplate/dealdialog.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        items: data
+     },
+      clickOutsideToClose:true
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+  };
+
+   function DialogController($scope, $mdDialog , items) {
+    $scope.theme='red';
+    $scope.adminsName = ["Haardik","Lather","Ankit","Vishal"];
+    $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
+   
+    $scope.data = items;
+  
+    $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+
+    if($scope.radioGroupModel){
+        // reporting live 
+         $scope.examTypePreFilled = ["Exam","Quiz","Final Exam","Pop Quiz"];
+
+    }
+    else{
+        $scope.examTypePreFilled = ["Lab","HomeWork","Project"];
+    }
+
+     $scope.$watch('radioGroupModel', function(newVal, oldVal){
+        
+            console.log(newVal);
+            if(newVal == true){
+                $scope.examTypePreFilled = [];
+                $scope.examTypePreFilled = ["Exam","Quiz","Final Exam","Pop Quiz"];
+            }
+            else{
+                $scope.examTypePreFilled= [];
+                $scope.examTypePreFilled = ["Lab","HomeWork","Project"];
+            }
+    }, true);
+
+    console.log( $scope.radioGroupModel);
+    console.log($scope.data);
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.answer = function(answer) {
+      $mdDialog.hide(answer);
+    };
+  }
+
+    // body...
+})

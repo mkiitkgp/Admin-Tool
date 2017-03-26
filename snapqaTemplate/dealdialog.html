@@ -1,0 +1,163 @@
+<md-dialog aria-label="Mango (Fruit)">
+ <form ng-cloak>
+  <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Mango (Fruit)</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+	  <md-dialog-content class="md-dialog-content" style="max-width:800px;max-height:810px; ">
+      <md-input-container class="md-block">
+       <label>Select Admin Name</label>
+        <md-select name="type" ng-model="data.adminName" ng-required="true">
+          <md-option ng-repeat="admin in adminsName" ng-value="admin">{{admin}}</md-option>
+        </md-select>	
+      </md-input-container>
+   
+
+
+  <div layout="row">
+    <md-input-container >
+          <label>Client Name</label>
+          <input md-maxlength="30" required name="name" ng-model="data.clientName" />
+          <div class="hint">Tell us what we should call you!</div>
+    </md-input-container>
+
+      <md-input-container >
+          <label>Course Number</label>
+          <input md-maxlength="30" required name="courseNumber" ng-model="data.courseNumber" />
+          <div class="hint">Enter Course number</div>
+    </md-input-container>
+
+      <md-input-container flex="30" >
+          <label>Subject Name</label>
+          <md-select name="type" ng-model="data.subjectName" ng-required="true" >
+            <md-option ng-repeat="subName in subjectNameArray" ng-value="subName">{{subName}}</md-option>
+          </md-select>
+        </md-input-container>
+        </div>
+  
+
+<!--
+   
+     <div ng-hide="!radioGroup">
+     	
+     	<md-input-container >
+        <input moment-picker="ctrl.timepicker1" ng-model="obj.timefrom" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
+     	</md-input-container>
+     	</div>
+     <div >
+
+     	<md-input-container>
+        <input moment-picker="ctrl.timepicker" ng-model="obj.timeto" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
+     	</md-input-container>
+     	</div>
+
+     	 <md-input-container flex = "20">
+	      <label>Duration </label>
+	    <input required type="number" step="5" name="rate" ng-model="data.duration" min="10"
+               max="200"  />   
+         </md-input-container>	
+     	
+	 
+    </div>
+    -->
+
+  		
+          <md-radio-group ng-model="radioGroupModel">
+     	  <md-radio-button ng-value="true" >Reporting live</md-radio-button>
+     	   <md-radio-button ng-value="false" >HomeWork</md-radio-button>
+      	  </md-radio-group>
+   
+  
+    
+     
+    
+    <div layout="row">
+	    <md-input-container  >
+	          <label>Book Name </label>
+	          <input md-maxlength="100"  name="name" ng-model="data.bookName" />
+	          <div class="hint">Tell us where to read!</div>
+	    </md-input-container>
+    
+    
+      <span class="currencyinput" style="font-size: 10px">&#8377; </span>
+	    <md-input-container >
+	          <label>Amount </label>
+	          <input  type="number" step="100" ng-model="data.amount" />
+	          <div class="hint">How much to pay!</div>
+	    </md-input-container>
+	     <md-input-container ng-show="!radioGroupModel" >
+	          <label>Amount told </label>
+	          <input  type="number" step="100" ng-model="data.amounttoldToPay" />
+	          <div class="hint">How much user pay!</div>
+	    </md-input-container>
+	    </div>
+	
+
+	<div layout="row">
+	  <md-input-container flex="100">
+	  <label>Select The type of Exam</label>
+        <md-select name="type" ng-model="data.examtype" ng-required="true">
+          <md-option ng-repeat="etype in examTypePreFilled" ng-value="etype">{{etype}}</md-option>
+        </md-select>
+
+       
+        </md-select>
+      </md-input-container>
+      </div>
+
+      
+	
+
+	 	<div layout="row">
+	    <md-input-container flex="30" >
+	      <label>Number of Tutor Required </label>
+	    <input required type="number" step="1" name="rate" ng-model="data.numberOfTutor" min="1"
+               max="5"  />  
+               
+         </md-input-container>	
+         <md-input-container class= "reviewText" flex = "25" ng-repeat="a in data.ratingArray track by $index">
+           <label>Rating {{$index + 1}} </label>
+          <input required type="number" step="0.2" name="rate" ng-model="a" min="1" max="5"  />  
+               </md-input-container>
+        </div>       
+              
+
+  
+
+    	<div layout="row" >
+         <md-input-container flex="100" >
+          <label>Comment and Material</label>
+          <textarea ng-model="data.materialComment" md-maxlength="300" rows="5" md-select-on-focus></textarea>
+        </md-input-container>
+        </div>
+     
+
+       
+
+   
+
+
+  
+
+  <!-- <md-button type="button" ng-click="reset()">RESET</md-button>
+  <md-button class="md-primary" ng-disabled="myForm.$invalid" ng-click="submit()">SUBMIT</md-button> -->
+
+	  </md-dialog-content>
+
+     <md-dialog-actions layout="row">
+     
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+       Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" class="md-primary">
+        Useful
+      </md-button>
+    </md-dialog-actions>
+	  </form>
+</md-dialog>
