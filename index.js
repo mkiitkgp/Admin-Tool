@@ -1,6 +1,37 @@
 var MyNameSpace = MyNameSpace || {};
 MyNameSpace.helpers = {
 	// functions written here
+
+    getStatusName : function(statusCode){
+        var statusMsg = "";
+      switch(statusCode){
+        case 100 : 
+            statusMsg = "Not Yet Assigned Tutor";
+            break;
+        case 200 : 
+            statusMsg = "Tutor Assigned but not yet Confirmed";
+            break;
+        case 300 : 
+            statusMsg = "Tutor Confirmed , Deal Ongoing ";
+            break;
+        case 400 : 
+            statusMsg = "Tutor does not solve";
+            break;
+        case 500 : 
+            statusMsg = "Client Side error ";
+            break; 
+        case 600 : 
+            statusMsg = "Got Answer , Not payment not Done ";
+            break; 
+        case 700 : 
+            statusMsg = "Payment Done Finally ";
+            break; 
+        default:
+            statusMsg = "Not Sure About this";                        
+
+      }
+      return statusMsg;
+    }
 }
 
 var app = angular.module('BlankApp', ['ngRoute','ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages','moment-picker']);
@@ -209,9 +240,14 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     $scope.adminsName = ["Haardik","Lather","Ankit","Vishal"];
     $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
    
+    $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing " , "Tutor does not solve ","Client Side error ","Got Answer , Not payment not Done ","Payment Done Finally"];
     $scope.data = items;
+
+    $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
   
     $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+    console.log( MyNameSpace.helpers.getStatusName($scope.data.status));
+    $scope.statusMessageText = MyNameSpace.helpers.getStatusName($scope.data.status);
 
     if($scope.radioGroupModel){
         // reporting live 

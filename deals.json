@@ -1,6 +1,7 @@
 [{  
    "adminName":"Haardik",
    "amount":1000,
+   "status":100,
    "amounttoldToPay":1000,
    "bookName":" ajfhjaf kahfkjhakf ",
    "clientName":"jhafjahfj",
@@ -29,6 +30,7 @@
 {  
    "adminName":"Lather",
    "amount":1500,
+   "status":200,
    "amounttoldToPay":1500,
    "bookName":"jhfsjhfgsjskfhsjkfh ksjhfjs",
    "clientName":"sfjhfjsfjsf jhfj a",
@@ -58,6 +60,7 @@
 {  
    "adminName":"Ankit",
    "amount":500,
+   "status":300,
    "amounttoldToPay":500,
    "bookName":"uyeruwyriuw ruwyru",
    "clientName":"abcsh cjhsf jhsg",
@@ -84,6 +87,7 @@
 },{  
    "adminName":"Vishal",
    "amount":200,
+   "status":500,
    "amounttoldToPay":200,
    "bookName":"quyetyqe yq eyq e",
    "clientName":"qyeqy jaghd vad hqg ",
