@@ -1,4 +1,20 @@
- <md-list-item class="md-2-line" class="secondary-button-padding" ng-repeat="data in raw_data" >
+ 
+ <div layout="row">
+ <md-input-container>
+        <md-select name="myselect"  placeholder="Filter By" ng-model="filterByOption" >
+          <md-option ng-repeat="foption in filterOptions" ng-value="foption">{{foption}}</md-option>
+        </md-select>
+      </md-input-container>
+
+   <md-input-container >
+          <label>Search</label>
+          <input md-maxlength="30" ng-model="searchText" />
+          <div class="hint">Search Anything</div>
+    </md-input-container>  
+    </div>   
+   
+
+ <md-list-item class="md-2-line" class="secondary-button-padding" ng-repeat="data in raw_data | filter:searchText | filter:newFilteroption(filterByOption)" >
           <div class="md-list-item-text" layout="column">
             <h3>{{ data.adminName }}</h3>
             <h4>{{ data.clientName }}</h4>

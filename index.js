@@ -216,6 +216,28 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
 
     });
 
+    $scope.newFilteroption = function (argument) {
+        if(argument != undefined){
+            
+        }
+    }
+
+    $scope.filterOptions = ["Reporting Live" , "Homework"];
+
+    console.log($scope.filterByOption);
+
+    $scope.$watch('filterByOption', function(newVal, oldVal){
+        if(newVal == "Reporting Live"){
+          
+        }
+        else{
+            console.log("change in value " + newVal); 
+            $scope.numberRev = null;
+        }
+    }, true);
+
+
+
     $scope.showAdvanced = function(ev, data) {
         console.log("coming inside ");
     $mdDialog.show({
