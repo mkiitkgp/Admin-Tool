@@ -50,13 +50,13 @@
      <div ng-hide="!radioGroup">
      	
      	<md-input-container >
-        <input moment-picker="ctrl.timepicker1" ng-model="obj.timefrom" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
+        <input moment-picker="ctrl.timepicker1" ng-model="startTime" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
      	</md-input-container>
      	</div>
      <div >
 
      	<md-input-container>
-        <input moment-picker="ctrl.timepicker" ng-model="obj.timeto" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
+        <input moment-picker="ctrl.timepicker" ng-model="endTime" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
      	</md-input-container>
      	</div>
 
@@ -79,7 +79,7 @@
       <span class="currencyinput" style="font-size: 10px">&#8377; </span>
 	    <md-input-container >
 	          <label>Amount </label>
-	          <input  type="number" step="100" ng-model="obj.amount" />
+	          <input min="0" type="number" step="100" ng-model="obj.amount" />
 	          <div class="hint">How much to pay!</div>
 	    </md-input-container>
 	   
@@ -97,19 +97,19 @@
 
        <md-input-container ng-show="!radioGroup" >
 	          <label>Amount told </label>
-	          <input  type="number" step="100" ng-model="obj.amounttoldToPay" />
+	          <input min="0" type="number" step="100" ng-model="obj.amounttoldToPay" />
 	          <div class="hint">How much user pay!</div>
 	    </md-input-container>
 
        <md-input-container>
             <label>Amount Received </label>
-            <input  type="number" step="100" ng-model="obj.amountReceived" />
+            <input min="0"  type="number" step="100" ng-model="obj.amountReceived" />
             <div class="hint">How much user sent?</div>
       </md-input-container>
 	 </div>  
 
 	  <div layout="row" id="numberOfTutor">
-	    <md-input-container flex = "20">
+	    <md-input-container flex = "20" >
 	      <label>Number of Tutor Required </label>
 	    <input  type="number" step="1" name="rate" ng-model="numberOfTutor" min="1"
                max="5"  />  

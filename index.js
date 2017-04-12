@@ -145,10 +145,8 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
     	// yes Condition
     	    var addDataRequest = $http({
                             method: 'POST',
-                            url: 'test.php',
-                            data: {
-                                floter : $scope.obj
-                            },
+                            url: 'http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/addNewDeal',
+                            data: $scope.obj,
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             }
@@ -157,9 +155,10 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
                                 //                                
                                 // console.log(data);
                                 if (data) {
+                                        console.log("Sucess");
 
                                 } else {
-                                    
+                                    console.log("error");
                                 }
 
                             })
@@ -187,10 +186,20 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
     	$scope.obj.numberOfTutor = $scope.numberOfTutor;
     	$scope.obj.ratingArray =[];
     	$scope.obj.ratingArray = $scope.reviewRequired;
-        $scope.obj.typeOfDeal=[];
+        $scope.obj.typeOfDeal;
 
-        $scope.obj.typeOfDeal.push({name:"Reporting Live",value:$scope.radioGroup});
-        $scope.obj.typeOfDeal.push({name:"HomeWork",value:!$scope.radioGroup});
+        if($scope.radioGroup){
+             $scope.obj.typeOfDeal = "Reporting Live";
+        }
+        else{
+            $scope.obj.typeOfDeal="Homework";
+        }
+      
+        $scope.obj.timefrom = moment($scope.startTime).format("DD-MM-YYYY HH:mm:ss");
+        $scope.obj.timeto = moment($scope.endTime).format("DD-MM-YYYY HH:mm:ss");
+        if($scope.obj.numberOfTutor == undefined){
+            $scope.obj.numberOfTutor = 0;
+        }
     	console.log($scope.obj);
     	//console.log($scope.reviewRequired);
 
@@ -257,7 +266,7 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     });
   };
 
-   function DialogController($scope, $mdDialog , items) {
+   function DialogController($scope, $mdDialog ,$rootScope, items) {
     $scope.theme='red';
     $scope.adminsName = ["Haardik","Lather","Ankit","Vishal"];
     $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
@@ -292,6 +301,19 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
                 $scope.examTypePreFilled = ["Lab","HomeWork","Project"];
             }
     }, true);
+
+    //  $scope.$watch('data.numberOfTutor', function(newVal, oldVal){
+    //     if(newVal != undefined){
+    //         console.log("change in value " + newVal);  
+    //         $rootScope.numberOfReviewsTextBox = newVal;
+    //         $scope.numberRev = newVal;
+    //     }
+    //     else{
+    //         console.log("change in value " + newVal); 
+    //         $scope.numberRev = null;
+    //     }
+    // }, true);
+
 
     console.log( $scope.radioGroupModel);
     console.log($scope.data);
