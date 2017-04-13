@@ -52,6 +52,7 @@ app.config(['$routeProvider',
         });
     }
 ]);
+
 app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('red')
       .primaryPalette('red');
@@ -72,13 +73,76 @@ app.service("ViewDealsService", function($http, $q) {
     }
 });
 
+app.service("GetOverallDataService", function($http, $q) {
+    var deferred = $q.defer();
+    $http.get("http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/overAll").then(function(data) {
+        deferred.resolve(data);
+    })
 
-app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootScope) {
+    this.getService = function() {
+        return deferred.promise;
+    }
+});
 
-	$scope.adminsName = ["Haardik" , "Lather","Ankit","Vishal"];
+
+app.service("ViewAllDealsService", function($http, $q) {
+    var deferred = $q.defer();
+    $http.get("http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/viewDeals").then(function(data) {
+        deferred.resolve(data);
+    })
+
+    this.getService = function() {
+        return deferred.promise;
+    }
+});
+
+
+
+
+app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootScope, GetOverallDataService) {
+
+
+    var overallData ;
+
+    var lookup = GetOverallDataService.getService();
+    lookup.then(function(data) {
+        $rootScope.raw_data = data.data;
+         // whole data
+        overallData = $rootScope.raw_data; 
+        console.log($rootScope.raw_data);
+        $scope.adminsName = overallData.adminList ;
+        $scope.examType = overallData.examType["ReportingLive"];
+
+         $scope.$watch('radioGroup', function(newVal, oldVal){
+        
+            console.log(newVal);
+            if(newVal == true){
+                $scope.examType = [];
+                $scope.examType = overallData.examType["ReportingLive"];
+            }
+            else{
+                $scope.examType= [];
+                $scope.examType = overallData.examType["Deadline"];
+            }
+    }, true);
+
+      
+        //$scope.subjectNameArray = overallData.subjectList;
+
+
+    });
+
+    // $scope.loadadminName = function(){
+    //      $scope.adminsName = overallData.adminList ;
+    // }
+	//$scope.adminsName = ["Haardik" , "Lather","Ankit","Vishal"];
+
+  
+
+    
 
 	$scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
-	$scope.examType = ["Exam","Quiz","Final Exam","Pop Quiz"];
+	
 
 	$rootScope.reportingLiveCheckBox = true;
 	$rootScope.HomeworkCheckBox = false;
@@ -86,19 +150,7 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 	$scope.reviewRequired= [];
 	$scope.radioGroup = true;
 
-    $scope.$watch('radioGroup', function(newVal, oldVal){
-    	
-    		console.log(newVal);
-    		if(newVal == true){
-    			$scope.examType = [];
-    			$scope.examType = ["Exam","Quiz","Final Exam","Pop Quiz"];
-    		}
-    		else{
-    			$scope.examType= [];
-    			$scope.examType = ["Lab","HomeWork","Project"];
-    		}
-	}, true);
-
+   
 	//$scope.numberOfTutor
 
 	$scope.$watch('numberOfTutor', function(newVal, oldVal){
@@ -215,15 +267,31 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 
   });
 
-app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialog,ViewDealsService) {
+app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialog,ViewDealsService,ViewAllDealsService,GetOverallDataService) {
 
     
-    var lookup = ViewDealsService.getService();
+    // var lookup = ViewDealsService.getService();
+    // lookup.then(function(data) {
+    //     $rootScope.raw_data = data.data; // whole data
+    //     console.log($rootScope.raw_data);
+
+    // });
+    
+    var lookup = ViewAllDealsService.getService();
     lookup.then(function(data) {
         $rootScope.raw_data = data.data; // whole data
-        console.log($rootScope.raw_data);
+       
+          var overAlldata = GetOverallDataService.getService();
+                overAlldata.then(function(data){
+                    $rootScope.raw_overall_data = data.data;
+                     console.log($rootScope.raw_overall_data);
+                })
 
     });
+
+  
+
+
 
     $scope.newFilteroption = function (argument) {
         if(argument != undefined){
@@ -255,7 +323,8 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
       parent: angular.element(document.body),
       targetEvent: ev,
       locals: {
-        items: data
+        items: data,
+        overalldata : $rootScope.raw_overall_data
      },
       clickOutsideToClose:true
     })
@@ -266,27 +335,35 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     });
   };
 
-   function DialogController($scope, $mdDialog ,$rootScope, items) {
+   function DialogController($scope, $mdDialog ,$rootScope, items ,overalldata) {
     $scope.theme='red';
-    $scope.adminsName = ["Haardik","Lather","Ankit","Vishal"];
-    $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
+
+    $scope.adminsName = overalldata.adminList;
+   // console.log( overalldata);
+   // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
    
-    $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing " , "Tutor does not solve ","Client Side error ","Got Answer , Not payment not Done ","Payment Done Finally"];
+  //  $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing " , "Tutor does not solve ","Client Side error ","Got Answer , Not payment not Done ","Payment Done Finally"];
     $scope.data = items;
 
     $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
   
-    $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+  //  $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+    if($scope.data.dealType == "Home Work"){
+        $scope.radioGroupModel = false;
+    }
+    else{
+        $scope.radioGroupModel = true;
+    }
     console.log( MyNameSpace.helpers.getStatusName($scope.data.status));
     $scope.statusMessageText = MyNameSpace.helpers.getStatusName($scope.data.status);
 
     if($scope.radioGroupModel){
         // reporting live 
-         $scope.examTypePreFilled = ["Exam","Quiz","Final Exam","Pop Quiz"];
+         $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
 
     }
     else{
-        $scope.examTypePreFilled = ["Lab","HomeWork","Project"];
+        $scope.examTypePreFilled = overalldata.examType["Deadline"];
     }
 
      $scope.$watch('radioGroupModel', function(newVal, oldVal){
@@ -294,11 +371,11 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
             console.log(newVal);
             if(newVal == true){
                 $scope.examTypePreFilled = [];
-                $scope.examTypePreFilled = ["Exam","Quiz","Final Exam","Pop Quiz"];
+                $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
             }
             else{
                 $scope.examTypePreFilled= [];
-                $scope.examTypePreFilled = ["Lab","HomeWork","Project"];
+                $scope.examTypePreFilled = overalldata.examType["Deadline"];
             }
     }, true);
 
@@ -315,7 +392,7 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     // }, true);
 
 
-    console.log( $scope.radioGroupModel);
+   // console.log( $scope.radioGroupModel);
     console.log($scope.data);
     $scope.hide = function() {
       $mdDialog.hide();

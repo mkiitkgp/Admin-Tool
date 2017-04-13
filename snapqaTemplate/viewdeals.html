@@ -15,10 +15,8 @@
    
 
  <md-list-item class="md-2-line" class="secondary-button-padding" ng-repeat="data in raw_data | filter:searchText | filter:newFilteroption(filterByOption)" >
-          <div class="md-list-item-text" layout="column">
-            <h3>{{ data.adminName }}</h3>
-            <h4>{{ data.clientName }}</h4>
-            <p>{{ data.subjectName }}</p>
+          <div class="md-list-item-text">
+            <h3>Admin name : {{ data.adminName }} , Client name :  {{ data.clientName }} and Subject name : {{ data.subjectName }}
           </div>
           <md-button class="md-secondary" ng-click="showAdvanced($event,data)">More Info</md-button>
            <md-divider ></md-divider>
