@@ -274,6 +274,8 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
         if($scope.obj.numberOfTutors == undefined){
             $scope.obj.numberOfTutors = 0;
         }
+
+        $scope.obj.duration = $scope.duration.toString();
     	console.log($scope.obj);
     	//console.log($scope.reviewRequired);
 
