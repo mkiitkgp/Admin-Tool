@@ -99,7 +99,7 @@ app.service("ViewAllDealsService", function($http, $q) {
 
 
 
-app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootScope, GetOverallDataService) {
+app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootScope, GetOverallDataService,$route) {
 
 
     var overallData ;
@@ -111,18 +111,19 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
         overallData = $rootScope.raw_data; 
         console.log($rootScope.raw_data);
         $scope.adminsName = overallData.adminList ;
-        $scope.examType = overallData.examType["ReportingLive"];
+        $rootScope.examType = overallData.examType["ReportingLive"];
+        $scope.subjectNameArray = overallData.subjectList;
 
          $scope.$watch('radioGroup', function(newVal, oldVal){
         
             console.log(newVal);
             if(newVal == true){
-                $scope.examType = [];
-                $scope.examType = overallData.examType["ReportingLive"];
+                $rootScope.examType = [];
+                $rootScope.examType = overallData.examType["ReportingLive"];
             }
             else{
-                $scope.examType= [];
-                $scope.examType = overallData.examType["Deadline"];
+                $rootScope.examType= [];
+                $rootScope.examType = overallData.examType["Deaddline"];
             }
     }, true);
 
@@ -131,6 +132,10 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 
 
     });
+
+    $scope.reloadRoute = function() {
+   $route.reload();
+        }
 
     // $scope.loadadminName = function(){
     //      $scope.adminsName = overallData.adminList ;
@@ -141,7 +146,7 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 
     
 
-	$scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
+	//$scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
 	
 
 	$rootScope.reportingLiveCheckBox = true;
@@ -153,7 +158,7 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
    
 	//$scope.numberOfTutor
 
-	$scope.$watch('numberOfTutor', function(newVal, oldVal){
+	$scope.$watch('numberOfTutors', function(newVal, oldVal){
 		if(newVal != undefined){
     		console.log("change in value " + newVal);  
     		$rootScope.numberOfReviewsTextBox = newVal;
@@ -174,16 +179,16 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 
    
 
-	$scope.obj={
-		adminName:"",
-		timefrom:"",
-		timeto:"",
-		duration:"",
-		clientName:"",
-		subjectName:"",
-		bookName:"",
-		amount:0
-	}
+	// $scope.obj={
+	// 	adminName:"",
+	// 	timefrom:"",
+	// 	timeto:"",
+	// 	duration:"",
+	// 	clientName:"",
+	// 	subjectName:"",
+	// 	bookName:"",
+	// 	amount:0
+	// }
 
 		$scope.showConfirm = function(ev) {	
    			
@@ -200,17 +205,32 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
                             url: 'http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/addNewDeal',
                             data: $scope.obj,
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
+                                'Content-Type': "application/json"
                             }
                         });
                         addDataRequest.success(function(data, status, headers, config) {
                                 //                                
                                 // console.log(data);
-                                if (data) {
-                                        console.log("Sucess");
+                                if (data.error != undefined) {
+                                $mdDialog.show(
+                                  $mdDialog.alert()
+                                    .parent(angular.element(document.querySelector('#popupContainer')))
+                                    .clickOutsideToClose(true)
+                                    .title('SomeThing Went Wrong !! Try Again ')
+                                    .ok('Got it!')
+                                    .targetEvent(ev)
+                                );
 
                                 } else {
-                                    console.log("error");
+
+                                $mdDialog.show(
+                                  $mdDialog.alert()
+                                    .parent(angular.element(document.querySelector('#popupContainer')))
+                                    .clickOutsideToClose(true)
+                                    .title('Your Deal is added to the database')
+                                    .ok('Got it!')
+                                    .targetEvent(ev)
+                                );
                                 }
 
                             })
@@ -235,22 +255,24 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
     $scope.submit = function() {
 
     	$scope.showConfirm();
-    	$scope.obj.numberOfTutor = $scope.numberOfTutor;
+    	$scope.obj.numberOfTutors = $scope.numberOfTutors;
     	$scope.obj.ratingArray =[];
     	$scope.obj.ratingArray = $scope.reviewRequired;
         $scope.obj.typeOfDeal;
 
         if($scope.radioGroup){
-             $scope.obj.typeOfDeal = "Reporting Live";
+             $scope.obj.dealType = "Live Session";
         }
         else{
-            $scope.obj.typeOfDeal="Homework";
+            $scope.obj.dealType="Deadline Session";
         }
       
-        $scope.obj.timefrom = moment($scope.startTime).format("DD-MM-YYYY HH:mm:ss");
-        $scope.obj.timeto = moment($scope.endTime).format("DD-MM-YYYY HH:mm:ss");
-        if($scope.obj.numberOfTutor == undefined){
-            $scope.obj.numberOfTutor = 0;
+        $scope.obj.timeFrom = moment($scope.startTime).toISOString();
+        $scope.obj.timeTo = moment($scope.endTime).toISOString();
+        //$scope.obj.timeFrom = $scope.startTime;
+        //$scope.obj.timeTo = $scope.endTime;
+        if($scope.obj.numberOfTutors == undefined){
+            $scope.obj.numberOfTutors = 0;
         }
     	console.log($scope.obj);
     	//console.log($scope.reviewRequired);

@@ -40,7 +40,7 @@
       <md-input-container flex="40">
           <label>Subject Name</label>
           <md-select name="type" ng-model="obj.subjectName"  >
-            <md-option ng-repeat="subName in subjectNameArray" ng-value="subName">{{subName}}</md-option>
+            <md-option ng-repeat="subName in subjectNameArray track by $index" ng-value="subName">{{subName}}</md-option>
           </md-select>
         </md-input-container>
    </div>
@@ -87,7 +87,7 @@
 
 	 <div layout="row" id="typeOfExam">
 	  <md-input-container flex="20">
-        <md-select name="typeOfExam1" id="typeOfExam1" placeholder="Select The type of Exam" ng-model="obj.examtype">
+        <md-select name="typeOfExam1" id="typeOfExam1" placeholder="Select The type of Exam" ng-model="obj.examType">
           <md-option ng-repeat="etype in examType" ng-value="etype">{{etype}}</md-option>
         </md-select>
 
@@ -97,13 +97,13 @@
 
        <md-input-container ng-show="!radioGroup" >
 	          <label>Amount told </label>
-	          <input min="0" type="number" step="100" ng-model="obj.amounttoldToPay" />
+	          <input min="0" type="number" step="100" ng-model="obj.priceTold" />
 	          <div class="hint">How much user pay!</div>
 	    </md-input-container>
 
        <md-input-container>
             <label>Amount Received </label>
-            <input min="0"  type="number" step="100" ng-model="obj.amountReceived" />
+            <input min="0"  type="number" step="100" ng-model="obj.priceReceived" />
             <div class="hint">How much user sent?</div>
       </md-input-container>
 	 </div>  
@@ -111,7 +111,7 @@
 	  <div layout="row" id="numberOfTutor">
 	    <md-input-container flex = "20" >
 	      <label>Number of Tutor Required </label>
-	    <input  type="number" step="1" name="rate" ng-model="numberOfTutor" min="1"
+	    <input  type="number" step="1" name="rate" ng-model="numberOfTutors" min="1"
                max="5"  />  
                
          </md-input-container>	
