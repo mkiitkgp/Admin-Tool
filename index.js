@@ -34,7 +34,7 @@ MyNameSpace.helpers = {
     }
 }
 
-var app = angular.module('BlankApp', ['ngRoute','ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages','moment-picker']);
+var app = angular.module('BlankApp', ['ngRoute','ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages','moment-picker','md.data.table']);
 
 app.config(['$routeProvider',
     function($routeProvider) {

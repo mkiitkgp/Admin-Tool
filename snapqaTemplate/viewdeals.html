@@ -1,5 +1,5 @@
  
- <div layout="row">
+ <!-- <div layout="row">
  <md-input-container>
         <md-select name="myselect"  placeholder="Filter By" ng-model="filterByOption" >
           <md-option ng-repeat="foption in filterOptions" ng-value="foption">{{foption}}</md-option>
@@ -12,15 +12,54 @@
           <div class="hint">Search Anything</div>
     </md-input-container>  
     </div>   
-   
+    -->
 
- <md-list-item class="md-2-line" class="secondary-button-padding" ng-repeat="data in raw_data | filter:searchText | filter:newFilteroption(filterByOption)" >
+<!--  <md-list-item class="md-2-line" class="secondary-button-padding" ng-repeat="data in raw_data | filter:searchText | filter:newFilteroption(filterByOption)" >
           <div class="md-list-item-text">
-            <h3>Admin name : {{ data.adminName }} , Client name :  {{ data.clientName }} and Subject name : {{ data.subjectName }}
+            <h3> {{ data.adminName }}&emsp;&emsp;{{ data.clientName }}&emsp;&emsp;{{ data.subjectName }}&emsp;&emsp;{{}}</h3>
           </div>
           <md-button class="md-secondary" ng-click="showAdvanced($event,data)">More Info</md-button>
            <md-divider ></md-divider>
-        </md-list-item>
+        </md-list-item> -->
+<md-toolbar class="md-table-toolbar md-default">
+  <div class="md-toolbar-tools">
+    <span>All Deals</span>
+  </div>
+</md-toolbar>   
+
+<md-table-container>
+  <table md-table md-row-select ng-model="selected" md-progress="promise">
+    <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+      <tr md-row>
+        <th md-column ><span>Subject (Course Name)</span></th>
+        <th md-column md-order-by="adminName" ><span>Admin Name</span></th>
+        <th md-column >Client Name</th>
+        <th md-column md-numeric md-order-by="amount">Price Told (Rs)</th>
+        <th md-column md-order-by="priceReceived">Price Received (Rs)</th>
+        <th md-column md-numeric>Number of Tutors</th>
+        <th md-column >Exam Type</th>
+        <th md-column md-numeric >Duration (min)</th>
+        <th md-column >Start Time</th>
+        <th md-column >End Time</th>
+      </tr>
+    </thead>
+    <tbody md-body>
+      <tr md-row md-select="data" md-select-id="name" md-auto-select ng-repeat="data in raw_data">
+        <td md-cell>{{data.subjectName}}</td>
+        <td md-cell>{{data.adminName}}</td>
+        <td md-cell>{{data.clientName}}</td>
+        <td md-cell>{{data.amount}}</td>
+        <td md-cell>{{data.priceReceived}}</td>
+        <td md-cell>{{data.ratingArray.length}}</td>
+        <td md-cell>{{data.dealType}}</td>
+        <td md-cell>{{data.duration}}</td>
+        <td md-cell>{{data.createdAt}}</td>
+        <td md-cell>{{data.timeTo}}</td>
+      </tr>
+    </tbody>
+  
+  </table>
+</md-table-container>     
        
 
 
