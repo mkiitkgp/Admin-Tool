@@ -301,18 +301,40 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
 
     // });
     
+
+
+  $scope.dataSeperator = function(data){
+        $rootScope.deadlineData=[];
+        $rootScope.liveSession =[];
+        angular.forEach(data , function(value,key){
+            if(value.dealType == "Deadline Session"){
+                $rootScope.deadlineData.push(value);
+            }
+            else{
+                $rootScope.liveSession.push(value);
+            }
+        }) ;
+    }
+
+
     var lookup = ViewAllDealsService.getService();
     lookup.then(function(data) {
-        $rootScope.raw_data = data.data; // whole data
-       
+        $rootScope.raw_data = data.data;
+        $scope.dataSeperator(data.data);
           var overAlldata = GetOverallDataService.getService();
                 overAlldata.then(function(data){
                     $rootScope.raw_overall_data = data.data;
                      console.log($rootScope.raw_overall_data);
+
                 })
 
     });
 
+    $scope.query = {
+        order: 'amount',
+        limit: 3,
+        page: 1
+      };
   
 
 

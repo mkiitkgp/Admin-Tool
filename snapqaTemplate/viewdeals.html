@@ -21,45 +21,109 @@
           <md-button class="md-secondary" ng-click="showAdvanced($event,data)">More Info</md-button>
            <md-divider ></md-divider>
         </md-list-item> -->
-<md-toolbar class="md-table-toolbar md-default">
-  <div class="md-toolbar-tools">
-    <span>All Deals</span>
-  </div>
-</md-toolbar>   
+ <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="Live Session">
+        <md-content class="md-padding">
+         <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+              <span>Live Session Deals</span>
+            </div>
+          </md-toolbar>   
 
-<md-table-container>
-  <table md-table md-row-select ng-model="selected" md-progress="promise">
-    <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+          <md-table-container>
+  <table md-table md-row-select ng-model="selected" >
+    <thead md-head md-order="liveOrder">
       <tr md-row>
-        <th md-column ><span>Subject (Course Name)</span></th>
-        <th md-column md-order-by="adminName" ><span>Admin Name</span></th>
-        <th md-column >Client Name</th>
-        <th md-column md-numeric md-order-by="amount">Price Told (Rs)</th>
-        <th md-column md-order-by="priceReceived">Price Received (Rs)</th>
-        <th md-column md-numeric>Number of Tutors</th>
-        <th md-column >Exam Type</th>
+        <th md-column md-order-by="createdAt">Start Time</th>
+        <th md-column md-order-by="timeTo">End Time</th>
         <th md-column md-numeric >Duration (min)</th>
-        <th md-column >Start Time</th>
-        <th md-column >End Time</th>
+        <th md-column >Exam Type</th>
+        <th md-column ><span>Admin Name</span></th>
+        <th md-column >Client Name</th>
+        <th md-column md-numeric>Number of Tutors</th>
+        <th md-column ><span>Subject (Course Name)</span></th>
+        <th md-column md-numeric md-order-by="amount">Price Told ($)</th>
+        <th md-column md-order-by="priceReceived">Price Received ($)</th>
+        <th md-column >Comment</th>
+        
+        
+        
+      
       </tr>
     </thead>
     <tbody md-body>
-      <tr md-row md-select="data" md-select-id="name" md-auto-select ng-repeat="data in raw_data">
-        <td md-cell>{{data.subjectName}}</td>
-        <td md-cell>{{data.adminName}}</td>
-        <td md-cell>{{data.clientName}}</td>
-        <td md-cell>{{data.amount}}</td>
-        <td md-cell>{{data.priceReceived}}</td>
-        <td md-cell>{{data.ratingArray.length}}</td>
-        <td md-cell>{{data.dealType}}</td>
-        <td md-cell>{{data.duration}}</td>
+      <tr md-row  ng-repeat="data in liveSession | orderBy:liveOrder">
         <td md-cell>{{data.createdAt}}</td>
         <td md-cell>{{data.timeTo}}</td>
+        <td md-cell>{{data.duration}}</td>
+        <td md-cell>{{data.dealType}}</td>
+        <td md-cell>{{data.adminName}}</td>
+        <td md-cell>{{data.clientName}}</td>
+        <td md-cell>{{data.ratingArray.length}}</td>
+        <td md-cell>{{data.subjectName}}</td>
+        <td md-cell>{{data.amount}}</td>
+        <td md-cell>{{data.priceReceived}}</td>
+        <td md-cell>{{data.materialComment}}</td>
       </tr>
     </tbody>
   
   </table>
-</md-table-container>     
+</md-table-container>  
+<md-table-pagination md-limit="query.limit" md-limit-options="[3, 6, 9]" md-page="query.page" md-total="{{liveSession.count}}"  md-page-select></md-table-pagination>
+         
+        </md-content>
+      </md-tab>
+      <md-tab label="Deadline">
+        <md-content class="md-padding">
+        <md-toolbar class="md-table-toolbar md-default">
+          <div class="md-toolbar-tools">
+            <span>Deadline Deals</span>
+          </div>
+        </md-toolbar>   
+        <md-table-container>
+
+  <table md-table md-row-select ng-model="selected" >
+    <thead md-head md-order="myOrder">
+      <tr md-row>
+        <th md-column md-order-by="timeTo"><span>End Time</span></th>
+        <th md-column ><span>Exam Type</span></th>
+        <th md-column >Admin Name </th>
+         <th md-column >Client Name</th>
+        <th md-column >Tutors Assigned</th>
+        <th md-column >Subject Name (Course Name)</th>
+        <th md-column md-numeric >Price Told ($)</th>
+        <th md-column >Price Received ($)</th>
+        <th md-column md-order-by="amount">Amount (Rs)</th>
+        <th md-column >Comment</th>
+      </tr>
+    </thead>
+    <tbody md-body>
+      <tr md-row ng-repeat="data in deadlineData | orderBy:myOrder">
+        <td md-cell>{{data.timeTo}}</td>
+        <td md-cell>{{data.dealType}}</td>
+        <td md-cell>{{data.adminName}}</td>
+        <td md-cell>{{data.clientName}}</td>
+        <td md-cell>{{data.ratingArray.length}}</td>
+       
+        <td md-cell>{{data.subjectName}} ({{data.courseNumber}})</td>
+        <td md-cell>{{data.priceTold}}</td>
+        <td md-cell>{{data.priceReceived}}</td>
+        <td md-cell>{{data.amount}}</td>
+        <td md-cell>{{data.materialComment}}</td>
+
+      </tr>
+    </tbody>
+  
+  </table>
+</md-table-container>    
+<md-table-pagination md-limit="query.limit" md-limit-options="[3, 6, 9]" md-page="query.page" md-total="{{deadlineData.count}}"  md-page-select></md-table-pagination> 
+        </md-content>
+        </md-tab>
+      </md-tabs>  
+
+
+
+
        
 
 
