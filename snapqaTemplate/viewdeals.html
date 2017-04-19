@@ -26,9 +26,20 @@
         <md-content class="md-padding">
          <md-toolbar class="md-table-toolbar md-default">
             <div class="md-toolbar-tools">
-              <span>Live Session Deals</span>
+              <h2 flex md-truncate ng-hide="show">Live Sessions</h2>
+               <md-input-container flex ng-hide="!show">
+                <input md-maxlength="30" ng-model="liveSessionSearchText" />
+                <div class="hint">Search Anything</div>
+                </md-input-container>  
+              
+                <md-button class="material-icons" ng-click="show=!show">search</md-button>
+               
+             
+           
             </div>
           </md-toolbar>   
+        
+    
 
           <md-table-container>
   <table md-table md-row-select ng-model="selected" >
@@ -52,7 +63,7 @@
       </tr>
     </thead>
     <tbody md-body md-ink-ripple>
-      <tr md-row  ng-repeat="data in liveSession | orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
+      <tr md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
         <td md-cell>{{data.createdAt}}</td>
         <td md-cell>{{data.timeTo}}</td>
         <td md-cell>{{data.duration}}</td>
@@ -76,9 +87,15 @@
       <md-tab label="Deadline">
         <md-content class="md-padding">
         <md-toolbar class="md-table-toolbar md-default">
-          <div class="md-toolbar-tools">
-            <span>Deadline Deals</span>
-          </div>
+         <div class="md-toolbar-tools">
+              <h2 flex md-truncate ng-hide="show">Deadline Deals</h2>
+               <md-input-container flex ng-hide="!show">
+                <input md-maxlength="30" ng-model="deadlineSearchText" />
+                <div class="hint">Search Anything</div>
+                </md-input-container>  
+                <md-button class="material-icons" ng-click="show=!show">search</md-button>
+            </div>
+
         </md-toolbar>   
         <md-table-container>
 
@@ -98,7 +115,7 @@
       </tr>
     </thead>
     <tbody md-body>
-      <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
+      <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | filter:deadlineSearchText| orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
         <td md-cell>{{data.timeTo}}</td>
         <td md-cell>{{data.dealType}}</td>
         <td md-cell>{{data.adminName}}</td>
