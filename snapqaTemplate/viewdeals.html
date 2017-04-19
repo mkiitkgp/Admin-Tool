@@ -51,8 +51,8 @@
       
       </tr>
     </thead>
-    <tbody md-body>
-      <tr md-row  ng-repeat="data in liveSession | orderBy:liveOrder">
+    <tbody md-body md-ink-ripple>
+      <tr md-row  ng-repeat="data in liveSession | orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
         <td md-cell>{{data.createdAt}}</td>
         <td md-cell>{{data.timeTo}}</td>
         <td md-cell>{{data.duration}}</td>
@@ -69,7 +69,7 @@
   
   </table>
 </md-table-container>  
-<md-table-pagination md-limit="query.limit" md-limit-options="[3, 6, 9]" md-page="query.page" md-total="{{liveSession.count}}"  md-page-select></md-table-pagination>
+<md-table-pagination md-limit="query.limit" md-limit-options="[3, 6, 9]" md-page="query.page" md-total="{{liveSession.length}}"  md-page-select></md-table-pagination>
          
         </md-content>
       </md-tab>
@@ -98,13 +98,12 @@
       </tr>
     </thead>
     <tbody md-body>
-      <tr md-row ng-repeat="data in deadlineData | orderBy:myOrder">
+      <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
         <td md-cell>{{data.timeTo}}</td>
         <td md-cell>{{data.dealType}}</td>
         <td md-cell>{{data.adminName}}</td>
         <td md-cell>{{data.clientName}}</td>
         <td md-cell>{{data.ratingArray.length}}</td>
-       
         <td md-cell>{{data.subjectName}} ({{data.courseNumber}})</td>
         <td md-cell>{{data.priceTold}}</td>
         <td md-cell>{{data.priceReceived}}</td>
@@ -116,7 +115,8 @@
   
   </table>
 </md-table-container>    
-<md-table-pagination md-limit="query.limit" md-limit-options="[3, 6, 9]" md-page="query.page" md-total="{{deadlineData.count}}"  md-page-select></md-table-pagination> 
+<md-table-pagination md-limit="query1.limit" md-limit-options="[3, 6, 9]" md-page="query1.page" md-total="{{deadlineData.length}}"  md-page-select></md-table-pagination>
+
         </md-content>
         </md-tab>
       </md-tabs>  

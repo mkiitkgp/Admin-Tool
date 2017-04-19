@@ -331,10 +331,15 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     });
 
     $scope.query = {
-        order: 'amount',
+        order: 'createdTime',
         limit: 3,
         page: 1
       };
+    $scope.query1 = {
+        order: 'timeTo',
+        limit: 3,
+        page: 1
+      };  
   
 
 
