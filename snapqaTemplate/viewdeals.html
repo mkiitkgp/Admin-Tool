@@ -26,14 +26,6 @@
         <md-content class="md-padding">
          <md-toolbar class="md-table-toolbar md-default" ng-hide="show">
             <div class="md-toolbar-tools">
-              <!-- <h2 flex md-truncate ng-hide="show">Live Sessions</h2>
-               <md-input-container flex ng-hide="!show">
-                <input md-maxlength="30" ng-model="liveSessionSearchText" />
-                <div class="hint">Search Anything</div>
-                </md-input-container>  
-              
-                <md-button class="material-icons" ng-click="show=!show">search</md-button>
-                -->
              <span flex></span>
               <md-button class="md-icon-button" ng-click="refreshLiveData()">
                 <md-icon>refresh</md-icon>
@@ -51,8 +43,6 @@
             <md-toolbar class="md-table-toolbar md-default" ng-show="show">
             <div class="md-toolbar-tools">
             <md-icon class="material-icons">search</md-icon>
-
-          <!--   <form flex="" class="ng-pristine ng-valid flex"> -->
              <md-input-container flex>
                 <input md-maxlength="30" ng-model="liveSessionSearchText" class="ng-pristine ng-valid ng-touched"  />
                 <div class="hint">Search Anything</div>
@@ -62,19 +52,6 @@
                 <md-icon>close</md-icon>
               </md-button>   
 
-             <!--  <input type="text" ng-model="liveSessionSearchText"  placeholder="search" class="ng-pristine ng-valid ng-touched" aria-invalid="false">
-
-            </form> -->
-            <!--   <md-button class="md-icon-button" ng-click="refreshLiveData()">
-                <md-icon>refresh</md-icon>
-              </md-button>
-              <md-button class="md-icon-button">
-                <md-icon>filter_list</md-icon>
-              </md-button>
-              <md-button class="md-icon-button">
-                <md-icon>more_vert</md-icon>
-              </md-button>
-            -->
             </div>
           </md-toolbar>   
         
