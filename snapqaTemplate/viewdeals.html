@@ -24,18 +24,57 @@
  <md-tabs md-dynamic-height md-border-bottom>
       <md-tab label="Live Session">
         <md-content class="md-padding">
-         <md-toolbar class="md-table-toolbar md-default">
+         <md-toolbar class="md-table-toolbar md-default" ng-hide="show">
             <div class="md-toolbar-tools">
-              <h2 flex md-truncate ng-hide="show">Live Sessions</h2>
+              <!-- <h2 flex md-truncate ng-hide="show">Live Sessions</h2>
                <md-input-container flex ng-hide="!show">
                 <input md-maxlength="30" ng-model="liveSessionSearchText" />
                 <div class="hint">Search Anything</div>
                 </md-input-container>  
               
                 <md-button class="material-icons" ng-click="show=!show">search</md-button>
-               
-             
+                -->
+             <span flex></span>
+              <md-button class="md-icon-button" ng-click="refreshLiveData()">
+                <md-icon>refresh</md-icon>
+              </md-button>
+              <md-button class="md-icon-button" ng-click ="changeView()">
+                <md-icon>filter_list</md-icon>
+              </md-button>
+              <md-button class="md-icon-button">
+                <md-icon>more_vert</md-icon>
+              </md-button>
            
+            </div>
+          </md-toolbar>   
+
+            <md-toolbar class="md-table-toolbar md-default" ng-show="show">
+            <div class="md-toolbar-tools">
+            <md-icon class="material-icons">search</md-icon>
+
+          <!--   <form flex="" class="ng-pristine ng-valid flex"> -->
+             <md-input-container flex>
+                <input md-maxlength="30" ng-model="liveSessionSearchText" class="ng-pristine ng-valid ng-touched"  />
+                <div class="hint">Search Anything</div>
+                </md-input-container>  
+
+              <md-button class="md-icon-button" ng-click ="closeSearchView()">
+                <md-icon>close</md-icon>
+              </md-button>   
+
+             <!--  <input type="text" ng-model="liveSessionSearchText"  placeholder="search" class="ng-pristine ng-valid ng-touched" aria-invalid="false">
+
+            </form> -->
+            <!--   <md-button class="md-icon-button" ng-click="refreshLiveData()">
+                <md-icon>refresh</md-icon>
+              </md-button>
+              <md-button class="md-icon-button">
+                <md-icon>filter_list</md-icon>
+              </md-button>
+              <md-button class="md-icon-button">
+                <md-icon>more_vert</md-icon>
+              </md-button>
+            -->
             </div>
           </md-toolbar>   
         
@@ -62,10 +101,10 @@
       
       </tr>
     </thead>
-    <tbody md-body md-ink-ripple>
-      <tr md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
-        <td md-cell>{{data.createdAt}}</td>
-        <td md-cell>{{data.timeTo}}</td>
+    <tbody md-body >
+      <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
+        <td md-cell>{{data.timeFromFormat}}</td>
+        <td md-cell>{{data.timeToFormat}}</td>
         <td md-cell>{{data.duration}}</td>
         <td md-cell>{{data.dealType}}</td>
         <td md-cell>{{data.adminName}}</td>
@@ -116,7 +155,7 @@
     </thead>
     <tbody md-body>
       <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | filter:deadlineSearchText| orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
-        <td md-cell>{{data.timeTo}}</td>
+        <td md-cell>{{data.timeToFormat}}</td>
         <td md-cell>{{data.dealType}}</td>
         <td md-cell>{{data.adminName}}</td>
         <td md-cell>{{data.clientName}}</td>

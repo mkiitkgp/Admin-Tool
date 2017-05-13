@@ -3,34 +3,45 @@ MyNameSpace.helpers = {
 	// functions written here
 
     getStatusName : function(statusCode){
-        var statusMsg = "";
+        var statusMsg ; 
+        var statusColor;
+       
       switch(statusCode){
         case 100 : 
             statusMsg = "Not Yet Assigned Tutor";
+            statusColor = "yellow";
             break;
         case 200 : 
             statusMsg = "Tutor Assigned but not yet Confirmed";
+            statusColor = "yellow";
             break;
         case 300 : 
-            statusMsg = "Tutor Confirmed , Deal Ongoing ";
+            statusMsg = "Tutor Confirmed , Deal Ongoing";
+            statusColor = "green";
             break;
         case 400 : 
             statusMsg = "Tutor does not solve";
+            statusColor="red";
             break;
         case 500 : 
-            statusMsg = "Client Side error ";
+            statusMsg = "Client Side error";
+            statusColor="red";
             break; 
         case 600 : 
-            statusMsg = "Got Answer , Not payment not Done ";
+            statusMsg = "Got Answer , Not payment not Done";
+            statusColor = "green";
             break; 
         case 700 : 
-            statusMsg = "Payment Done Finally ";
+            statusMsg = "Payment Done Finally";
+            statusColor = "blue";
             break; 
         default:
-            statusMsg = "Not Sure About this";                        
+            statusMsg = "Not Sure About this";
+            statusColor="red";                        
 
       }
-      return statusMsg;
+     var statusObj = {'statusMsg':statusMsg , 'statusColor':statusColor};
+     return statusObj;
     }
 }
 
@@ -60,7 +71,17 @@ app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('blue')
       .primaryPalette('blue');
 
+    $mdThemingProvider.theme('yellow')
+      .primaryPalette('yellow');  
+
+    $mdThemingProvider.theme('green')
+      .primaryPalette('green');  
+
+    $mdThemingProvider.alwaysWatchTheme(true);  
+
   });
+
+ 
 
 app.service("ViewDealsService", function($http, $q) {
     var deferred = $q.defer();
@@ -291,7 +312,7 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
 
   });
 
-app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialog,ViewDealsService,ViewAllDealsService,GetOverallDataService) {
+app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope,$mdDialog,ViewDealsService,ViewAllDealsService,GetOverallDataService) {
 
     
     // var lookup = ViewDealsService.getService();
@@ -300,19 +321,44 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     //     console.log($rootScope.raw_data);
 
     // });
+  $scope.show = false;  
+  $scope.changeView = function(){
+    $scope.show = true;
+  }
+  $scope.closeSearchView = function(){
+    $scope.show = false;
+    $scope.liveSessionSearchText = '';
+  }
     
 
 
   $scope.dataSeperator = function(data){
         $rootScope.deadlineData=[];
         $rootScope.liveSession =[];
+
+        var statusCodeArray=[100,200,300,400,500,600,700];
         angular.forEach(data , function(value,key){
             if(value.dealType == "Deadline Session"){
+                if(value.timeTo != undefined){
+                    value["timeToFormat"] = moment(value.timeTo).format('DD-MM-YYYY HH:mm');
+                }
                 $rootScope.deadlineData.push(value);
+                
+                //var dateMonthAsWord = moment("2014-02-27T10:00:00").format('DD-MMM-YYYY');
+               
             }
             else{
+                if(value.timeTo != undefined){
+                    value["timeToFormat"] = moment(value.timeTo).format('DD-MM-YYYY HH:mm');
+                }
+                if(value.createdAt != undefined){
+                    value["timeFromFormat"] = moment(value.createdAt).format('DD-MM-YYYY HH:mm');
+                }
                 $rootScope.liveSession.push(value);
             }
+
+            value["numberOfTutors"] = value.ratingArray.length;
+            value["statusCode"] = statusCodeArray[Math.floor(Math.random() * statusCodeArray.length)];
         }) ;
     }
 
@@ -321,6 +367,7 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     lookup.then(function(data) {
         $rootScope.raw_data = data.data;
         $scope.dataSeperator(data.data);
+        $scope.copyOriginalData = angular.copy(data.data);
           var overAlldata = GetOverallDataService.getService();
                 overAlldata.then(function(data){
                     $rootScope.raw_overall_data = data.data;
@@ -341,7 +388,12 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
         page: 1
       };  
   
-
+    $scope.refreshLiveData = function(){
+       
+            $scope.dataSeperator($scope.copyOriginalData);
+   
+       
+    }
 
 
     $scope.newFilteroption = function (argument) {
@@ -386,28 +438,55 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
     });
   };
 
+
+    $scope.showAdvancedLive = function(ev, data) {
+        console.log("coming inside Live ");
+    $mdDialog.show({
+      controller: DialogControllerLive,
+      templateUrl: 'snapqaTemplate/dealdialogLive.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals: {
+        items: data,
+        overalldata : $rootScope.raw_overall_data
+     },
+      clickOutsideToClose:true
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+  };
+
    function DialogController($scope, $mdDialog ,$rootScope, items ,overalldata) {
-    $scope.theme='red';
+   
 
     $scope.adminsName = overalldata.adminList;
+    $scope.subjectNameArray = overalldata.subjectList;
    // console.log( overalldata);
    // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
    
-  //  $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing " , "Tutor does not solve ","Client Side error ","Got Answer , Not payment not Done ","Payment Done Finally"];
+    $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing" , "Tutor does not solve","Client Side error","Got Answer , Not payment not Done","Payment Done Finally"];
     $scope.data = items;
+    console.log($scope.data);
 
     $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
-  
+    // to input the status statusMsg
+    $scope.statusObj=MyNameSpace.helpers.getStatusName($scope.data.statusCode);
+    console.log($scope.statusObj);
+   //$scope.theme = $scope.statusObj.statusColor;
+   // $scope.statusMessageText = $scope.statusObj.statusMsg;
+
+
   //  $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
-    if($scope.data.dealType == "Home Work"){
+    if($scope.data.dealType == "Deadline Session"){
         $scope.radioGroupModel = false;
     }
     else{
         $scope.radioGroupModel = true;
     }
-    console.log( MyNameSpace.helpers.getStatusName($scope.data.status));
-    $scope.statusMessageText = MyNameSpace.helpers.getStatusName($scope.data.status);
-
+   
     if($scope.radioGroupModel){
         // reporting live 
          $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
@@ -455,6 +534,94 @@ app.controller('viewdealsController', function ($scope,$http,$rootScope,$mdDialo
 
     $scope.answer = function(answer) {
       $mdDialog.hide(answer);
+    };
+  }
+
+  function DialogControllerLive($scope, $mdDialog ,$rootScope, items ,overalldata) {
+   
+
+    $scope.adminsName = overalldata.adminList;
+    $scope.subjectNameArray = overalldata.subjectList;
+
+   // console.log( overalldata);
+   // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
+   
+    $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing" , "Tutor does not solve","Client Side error","Got Answer , Not payment not Done","Payment Done Finally"];
+    $scope.data = items;
+    $scope.copy = angular.copy(items);
+    console.log($scope.data);
+
+    $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
+    // to input the status statusMsg
+    $scope.statusObj=MyNameSpace.helpers.getStatusName($scope.data.statusCode);
+    console.log($scope.statusObj);
+   //$scope.theme = $scope.statusObj.statusColor;
+   // $scope.statusMessageText = $scope.statusObj.statusMsg;
+
+
+  //  $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+    if($scope.data.dealType == "Deadline Session"){
+        $scope.radioGroupModel = false;
+    }
+    else{
+        $scope.radioGroupModel = true;
+    }
+   
+    if($scope.radioGroupModel){
+        // reporting live 
+         $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
+
+    }
+    else{
+        $scope.examTypePreFilled = overalldata.examType["Deadline"];
+    }
+
+     $scope.$watch('radioGroupModel', function(newVal, oldVal){
+        
+            console.log(newVal);
+            if(newVal == true){
+                $scope.examTypePreFilled = [];
+                $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
+            }
+            else{
+                $scope.examTypePreFilled= [];
+                $scope.examTypePreFilled = overalldata.examType["Deadline"];
+            }
+    }, true);
+
+    //  $scope.$watch('data.numberOfTutor', function(newVal, oldVal){
+    //     if(newVal != undefined){
+    //         console.log("change in value " + newVal);  
+    //         $rootScope.numberOfReviewsTextBox = newVal;
+    //         $scope.numberRev = newVal;
+    //     }
+    //     else{
+    //         console.log("change in value " + newVal); 
+    //         $scope.numberRev = null;
+    //     }
+    // }, true);
+
+
+   // console.log( $scope.radioGroupModel);
+    console.log($scope.data);
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.answer = function(answer) {
+        if(!answer){
+             $scope.data = $scope.copy;
+            $mdDialog.cancel();
+            
+             
+        }
+        else{
+             $mdDialog.cancel();
+        }
     };
   }
 
