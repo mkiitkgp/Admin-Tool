@@ -358,8 +358,15 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
             }
 
             value["numberOfTutors"] = value.ratingArray.length;
+
             value["statusCode"] = statusCodeArray[Math.floor(Math.random() * statusCodeArray.length)];
+            $scope.statusObj=MyNameSpace.helpers.getStatusName(value.statusCode);
+            value['statusObj'] = $scope.statusObj;
         }) ;
+
+        console.log($rootScope.deadlineData);
+        $rootScope.deadlineDataCopy = angular.copy($rootScope.deadlineData);
+        $rootScope.liveSessionCopy = angular.copy($rootScope.liveSession);
     }
 
 
@@ -429,7 +436,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
         items: data,
         overalldata : $rootScope.raw_overall_data
      },
-      clickOutsideToClose:true
+      clickOutsideToClose:false
     })
     .then(function(answer) {
       $scope.status = 'You said the information was "' + answer + '".';
@@ -450,7 +457,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
         items: data,
         overalldata : $rootScope.raw_overall_data
      },
-      clickOutsideToClose:true
+      clickOutsideToClose:false
     })
     .then(function(answer) {
       $scope.status = 'You said the information was "' + answer + '".';
@@ -468,19 +475,20 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
    // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
    
     $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing" , "Tutor does not solve","Client Side error","Got Answer , Not payment not Done","Payment Done Finally"];
-    $scope.data = items;
-    console.log($scope.data);
+    $scope.data_deadline = items;
+    $scope.data_deadline_copy = angular.copy($scope.data_deadline);
+    console.log($scope.data_deadline);
 
     $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
     // to input the status statusMsg
-    $scope.statusObj=MyNameSpace.helpers.getStatusName($scope.data.statusCode);
+    $scope.statusObj=MyNameSpace.helpers.getStatusName($scope.data_deadline.statusCode);
     console.log($scope.statusObj);
    //$scope.theme = $scope.statusObj.statusColor;
    // $scope.statusMessageText = $scope.statusObj.statusMsg;
 
 
   //  $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
-    if($scope.data.dealType == "Deadline Session"){
+    if($scope.data_deadline.dealType == "Deadline Session"){
         $scope.radioGroupModel = false;
     }
     else{
@@ -523,7 +531,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
 
 
    // console.log( $scope.radioGroupModel);
-    console.log($scope.data);
+    console.log($scope.data_deadline);
     $scope.hide = function() {
       $mdDialog.hide();
     };
@@ -533,7 +541,18 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
     };
 
     $scope.answer = function(answer) {
-      $mdDialog.hide(answer);
+     if(!answer){
+            
+            $mdDialog.cancel();
+            $scope.data_deadline = angular.copy(items);
+            $rootScope.deadlineData = angular.copy($rootScope.deadlineDataCopy);
+            $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
+            
+           
+        }
+        else{
+            $mdDialog.cancel();
+        }
     };
   }
 
@@ -548,7 +567,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
    
     $scope.statusMessage = ["Not Yet Assigned Tutor" , "Tutor Assigned but not yet Confirmed" , "Tutor Confirmed , Deal Ongoing" , "Tutor does not solve","Client Side error","Got Answer , Not payment not Done","Payment Done Finally"];
     $scope.data = items;
-    $scope.copy = angular.copy(items);
+   // $scope.copy = angular.copy(items);
     console.log($scope.data);
 
     $scope.users = [{name:"Mohit Kushwaha" , phone:"7338496008"} , {name:"abhishek kumar" , phone:"7501384719"}];
@@ -614,8 +633,13 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
 
     $scope.answer = function(answer) {
         if(!answer){
-             $scope.data = $scope.copy;
+            
             $mdDialog.cancel();
+
+            $scope.data = angular.copy(items);
+            $rootScope.deadlineData = angular.copy($rootScope.deadlineDataCopy);
+            $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
+            
             
              
         }

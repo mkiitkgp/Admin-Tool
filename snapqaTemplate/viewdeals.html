@@ -63,6 +63,7 @@
       <tr md-row>
         <th md-column md-order-by="createdAt">Start Time</th>
         <th md-column md-order-by="timeTo">End Time</th>
+        <th md-column ><span>Deal Status Color</span></th>
         <th md-column md-numeric >Duration (min)</th>
         <th md-column >Exam Type</th>
         <th md-column ><span>Admin Name</span></th>
@@ -82,6 +83,11 @@
       <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
         <td md-cell>{{data.timeFromFormat}}</td>
         <td md-cell>{{data.timeToFormat}}</td>
+        <td md-cell><md-button class="md-icon-button">
+          <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
+          <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
+          </md-button>
+        </td>
         <td md-cell>{{data.duration}}</td>
         <td md-cell>{{data.dealType}}</td>
         <td md-cell>{{data.adminName}}</td>
@@ -120,8 +126,9 @@
       <tr md-row>
         <th md-column md-order-by="timeTo"><span>End Time</span></th>
         <th md-column ><span>Exam Type</span></th>
+        <th md-column ><span>Deal Status Color</span></th>
         <th md-column >Admin Name </th>
-         <th md-column >Client Name</th>
+        <th md-column >Client Name</th>
         <th md-column >Tutors Assigned</th>
         <th md-column >Subject Name (Course Name)</th>
         <th md-column md-numeric >Price Told ($)</th>
@@ -134,6 +141,11 @@
       <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | filter:deadlineSearchText| orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
         <td md-cell>{{data.timeToFormat}}</td>
         <td md-cell>{{data.dealType}}</td>
+        <td md-cell><md-button class="md-icon-button">
+          <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
+          <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
+          </md-button>
+        </td>
         <td md-cell>{{data.adminName}}</td>
         <td md-cell>{{data.clientName}}</td>
         <td md-cell>{{data.ratingArray.length}}</td>
