@@ -297,6 +297,7 @@ app.controller('addDealsController', function ($scope,$mdDialog, $http , $rootSc
         }
 
         $scope.obj.duration = $scope.duration.toString();
+        $scope.obj.statusCode = 100;
     	console.log($scope.obj);
     	//console.log($scope.reviewRequired);
 
@@ -466,7 +467,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
     });
   };
 
-   function DialogController($scope, $mdDialog ,$rootScope, items ,overalldata) {
+   function DialogController($scope, $mdDialog ,$rootScope, items ,overalldata , $mdToast) {
    
 
     $scope.adminsName = overalldata.adminList;
@@ -531,9 +532,49 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
 
 
    // console.log( $scope.radioGroupModel);
+    $scope.loadProgressBar = false;
+    $scope.editFormApiCallDeadline = function(obj){
+         var editObj ={
+            "_id":obj._id,
+            "data":obj
+         };
+         var editDataRequest = $http({
+                            method: 'POST',
+                            url: 'http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/editDeal',
+                            data: editObj,
+                            headers: {
+                                'Content-Type': "application/json"
+                            }
+                        });
+          editDataRequest.success(function(data, status, headers, config) {
+                                                 
+                                 console.log(data);
+                                $scope.loadProgressBar = false ; 
+                                 if(!data.error){
+                                    $mdDialog.cancel();  
+                                    $scope.showSimpleToast("Your Deal is Edited Successfully");
+                                 }
+                            })
+                            .error(function(data, status, headers, config) {
+                               console.log(data);
+                               $scope.loadProgressBar = false ; 
+                               $mdDialog.cancel();
+                               $scope.showSimpleToast("Something Failed! Try Again");
+                            })
+    }
+
     console.log($scope.data_deadline);
     $scope.hide = function() {
       $mdDialog.hide();
+    };
+
+    $scope.showSimpleToast = function(msg) {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent(msg)
+            .position('top right' )
+            .hideDelay(2000)
+        );
     };
 
     $scope.cancel = function() {
@@ -542,21 +583,20 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
 
     $scope.answer = function(answer) {
      if(!answer){
-            
             $mdDialog.cancel();
             $scope.data_deadline = angular.copy(items);
             $rootScope.deadlineData = angular.copy($rootScope.deadlineDataCopy);
             $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
-            
-           
         }
         else{
-            $mdDialog.cancel();
+             $scope.loadProgressBar = true ; 
+             $scope.editFormApiCallDeadline($scope.data_deadline);
+            //$mdDialog.cancel();
         }
     };
   }
 
-  function DialogControllerLive($scope, $mdDialog ,$rootScope, items ,overalldata) {
+  function DialogControllerLive($scope, $mdDialog ,$rootScope, items ,overalldata, $mdToast) {
    
 
     $scope.adminsName = overalldata.adminList;
@@ -623,6 +663,7 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
 
    // console.log( $scope.radioGroupModel);
     console.log($scope.data);
+    $scope.loadProgressBar = false;
     $scope.hide = function() {
       $mdDialog.hide();
     };
@@ -631,20 +672,56 @@ app.controller('viewdealsController', function ($scope,$http,$timeout,$rootScope
       $mdDialog.cancel();
     };
 
+    $scope.showSimpleToast = function(msg) {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent(msg)
+            .position('top right' )
+            .hideDelay(2000)
+        );
+  };
+
+
+    $scope.editFormApiCall = function(obj){
+         var editObj ={
+            "_id":obj._id,
+            "data":obj
+         };
+         var editDataRequest = $http({
+                            method: 'POST',
+                            url: 'http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/editDeal',
+                            data: editObj,
+                            headers: {
+                                'Content-Type': "application/json"
+                            }
+                        });
+          editDataRequest.success(function(data, status, headers, config) {
+                                                 
+                                 console.log(data);
+                                $scope.loadProgressBar = false ; 
+                                 if(!data.error){
+                                    $mdDialog.cancel();  
+                                    $scope.showSimpleToast("Your Deal is Edited Successfully");
+                                 }
+                            })
+                            .error(function(data, status, headers, config) {
+                               console.log(data);
+                               $scope.loadProgressBar = false ; 
+                               $mdDialog.cancel();
+                               $scope.showSimpleToast("Something Failed! Try Again");
+                            })
+    }
+
     $scope.answer = function(answer) {
         if(!answer){
-            
             $mdDialog.cancel();
-
             $scope.data = angular.copy(items);
             $rootScope.deadlineData = angular.copy($rootScope.deadlineDataCopy);
             $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
-            
-            
-             
         }
         else{
-             $mdDialog.cancel();
+                $scope.loadProgressBar = true ; 
+                $scope.editFormApiCall($scope.data);
         }
     };
   }

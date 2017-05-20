@@ -160,8 +160,11 @@
       <md-button ng-click="answer(false)">
        Not Save
       </md-button>
-      <md-button ng-click="answer(true)" class="md-primary">
-        Save
+      <md-button ng-show="loadProgressBar">
+      <md-progress-circular style="margin: auto "  class="md-hue-2" md-diameter="20px"></md-progress-circular>
+      </md-button>
+      <md-button ng-hide="loadProgressBar" ng-click="answer(true)" class="md-primary" >
+       <span > Save </span>
       </md-button>
     </md-dialog-actions>
 	  </form>

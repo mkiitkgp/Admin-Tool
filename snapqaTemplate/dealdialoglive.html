@@ -158,10 +158,13 @@
      
       <!-- <span flex></span> -->
       <md-button ng-click="answer(false)">
-       Not Useful
+       Cancel
       </md-button>
-      <md-button ng-click="answer(true)" class="md-primary">
-        Useful
+      <md-button ng-show="loadProgressBar">
+      <md-progress-circular style="margin: auto "  class="md-hue-2" md-diameter="20px"></md-progress-circular>
+      </md-button>
+      <md-button ng-hide="loadProgressBar" ng-click="answer(true)" class="md-primary" >
+       <span > Save </span>
       </md-button>
     </md-dialog-actions>
 	  </form>
