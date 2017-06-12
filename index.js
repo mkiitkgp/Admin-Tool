@@ -365,7 +365,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
             value["numberOfTutors"] = value.ratingArray.length;
 
-            value["statusCode"] = statusCodeArray[Math.floor(Math.random() * statusCodeArray.length)];
+            value["statusCode"] = value.statusCode;
             $scope.statusObj = MyNameSpace.helpers.getStatusName(value.statusCode);
             value['statusObj'] = $scope.statusObj;
         });
