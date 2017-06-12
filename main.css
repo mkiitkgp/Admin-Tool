@@ -29,3 +29,31 @@ md-input-container > md-radio-group > md-radio-button {
 .demo-toolbar{
 	
 }    
+
+md-toast {
+z-index: 10000;
+}
+.md-fixed-top {
+position: fixed;
+top: 66px; // size of my navbar + 16px
+}
+
+.md-fixed-right {
+position: fixed;
+right: 16px;
+}
+
+#borderForm{
+     box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+
+}
+
+.md-datepicker-input {
+    color:white;
+}
+.md-datepicker-triangle-button .md-datepicker-expand-triangle{
+    border-top-color:white;
+}
+.md-datepicker-input-container{
+    border-bottom-color:white;
+}

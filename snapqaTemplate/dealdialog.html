@@ -129,7 +129,16 @@
            <label>Rating {{$index + 1}} </label>
           <input required type="number" step="0.2" name="rate" ng-model="a" min="1" max="5"  />  
                </md-input-container>
-        </div>       
+        </div>    
+
+    <div layout="row" ng-hide="data_deadline.contributor.length == 0">
+     
+      <md-chips ng-repeat = "user in data_deadline.contributor">
+        <md-chip>{{user.userName}}
+        <md-tooltip>Rating : {{user.rating}}  </md-tooltip>
+        </md-chip>
+      </md-chips>
+    </div>       
               
 
   

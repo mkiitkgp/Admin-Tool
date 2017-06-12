@@ -1,164 +1,180 @@
-  
-<form name="myForm" class="container-fluid">
-<div class="md-padding" layout-align="center">
 
-<div layout="row" >
-  <md-button  ng-click=>{{title1}}</md-button>
+<div id="put" style="margin:8px 8px 8px;">
+
+<md-toolbar>
+  <div class="md-toolbar-tools">
+  <a md-truncate flex style="font-size: 18px;font-weight: 500;" href="#/adddeals" >ADD NEW DEAL</a>
+  <md-button class="md-hue-1" href="#/viewdeals">View Deals</md-button>
+  <md-button class="md-hue-1" href="#/userrating">User Ratings</md-button>
+
+  </div>
+</md-toolbar>  
+
+ <!-- <md-content>
+        <md-card>
+    <md-card-content>  -->
+    
+    <form name="myForm" class="container-fluid" id="borderForm">
+    <div class="md-padding" layout-align="center">
+    <div layout="row" id="radioOptions">
+              <md-radio-group ng-model="radioGroup" >
+            <md-radio-button ng-value="true" class="md-primary" >Reporting Live</md-radio-button>
+              <md-radio-button ng-value="false"  class="md-primary"> Homework </md-radio-button>
+              
+
+        </md-radio-group>
+        </div>
+
+      <div layout="row" id="adminname">
+          <md-input-container flex="50">
+            <md-select name="myselect" id="myselect"  placeholder="Select Admin Name" ng-model="obj.adminName" ng-required="true">
+              <md-option ng-repeat="admin in adminsName" ng-value="admin">{{admin}}</md-option>
+            </md-select>
+          </md-input-container>
+       
+        </div>
+
+        <div layout="row" id="clientDesc">
+
+        <md-input-container >
+              <label>Client Name</label>
+             
+              <input md-maxlength="30" required name="name" ng-model="obj.clientName" />
+              <div class="hint">Tell us what we should call you!</div>
+        </md-input-container>
+
+          <md-input-container style="margin-left: 10px;" >
+              <label>Course Number</label>
+              <input md-maxlength="30"  name="courseNumber" ng-model="obj.courseNumber" />
+              <div class="hint">Enter Course number</div>
+        </md-input-container>
+
+          <md-input-container flex="40">
+              <label>Subject Name</label>
+            
+              <md-select name="type" ng-model="obj.subjectName"  >
+                <md-option ng-repeat="subName in subjectNameArray track by $index" ng-value="subName">{{subName}}</md-option>
+              </md-select>
+            </md-input-container>
+       </div>
+
+
+         <div layout="row" id="startTimeEndTime">
+         <div ng-hide="!radioGroup">
+         	
+         	<md-input-container >
+            <label>Start Time</label>
+           
+            <input moment-picker="ctrl.timepicker1" ng-model="startTime" ng-model-options="{ updateOn: 'blur' }" format="DD-MM-YYYY HH:mm" >
+         	</md-input-container>
+         	</div>
+         <div >
+
+         	<md-input-container>
+            <input moment-picker="ctrl.timepicker" ng-model="endTime" ng-model-options="{ updateOn: 'blur' }" format="DD-MM-YYYY HH:mm" placeholder="End Time">
+         	</md-input-container>
+         	</div>
+
+         	 <md-input-container flex = "20">
+    	      <label>Duration </label>
+    	    <input type="number" step="5" name="rate" ng-model="duration" min="10" max="200"  />   
+             </md-input-container>	
+         	
+    	 
+        </div> 
+        
+         <div layout="row" id="bookName">
+    	    <md-input-container flex="50" >
+    	          <label>Book Name </label>
+    	          <input md-maxlength="100"  name="name" ng-model="obj.bookName" />
+    	          <div class="hint">Tell us where to read!</div>
+    	    </md-input-container>
+        
+        
+         
+    	    <md-input-container >
+    	          <label>Amount </label>
+    	          <input min="0" type="number" step="100" ng-model="obj.amount" />
+    	          <div class="hint">How much to pay!</div>
+    	    </md-input-container>
+    	   
+    	</div> 
+
+    	 <div layout="row" id="typeOfExam">
+    	  <md-input-container flex="20">
+            <md-select name="typeOfExam1" id="typeOfExam1" placeholder="Select The type of Exam" ng-model="obj.examType">
+              <md-option ng-repeat="etype in examType" ng-value="etype">{{etype}}</md-option>
+            </md-select>
+
+           
+            </md-select>
+          </md-input-container>
+
+           <md-input-container  >
+    	          <label>Amount told </label>
+    	          <input min="0" type="number" step="100" ng-model="obj.priceTold" />
+    	          <div class="hint">How much user pay!</div>
+    	    </md-input-container>
+
+           <md-input-container>
+                <label>Amount Received </label>
+                <input min="0"  type="number" step="100" ng-model="obj.priceReceived" />
+                <div class="hint">How much user sent?</div>
+          </md-input-container>
+    	 </div>  
+
+    	  <div layout="row" id="numberOfTutor">
+    	    <md-input-container flex = "20" >
+    	      <label>Number of Tutor Required </label>
+    	    <input  type="number" step="1" name="rate" ng-model="numberOfTutors" min="1"
+                   max="5"  />  
+                   
+             </md-input-container>	
+             <md-input-container class= "reviewText" ng-hide="numberRev == null" flex = "15" ng-repeat="a in range(numberOfReviewsTextBox) track by $index">
+               <label>Rating {{$index + 1}} </label>
+              <input  type="number" step="0.2" name="rate" ng-model="reviewRequired[$index]" min="1"
+                   max="5"  />  
+                   </md-input-container>
+                   </div>
+
+      
+
+         <div layout="row" id="commentMaterial">
+             <md-input-container flex="100" >
+              <label>Comment and Material</label>
+              <textarea ng-model="obj.materialComment" md-maxlength="300" rows="5" md-select-on-focus></textarea>
+            </md-input-container>
+         </div>  
+
+          <div layout="row" id="adminNote">
+             <md-input-container flex="100" >
+              <label>Note For admins</label>
+              <textarea ng-model="obj.note" md-maxlength="300" rows="3" md-select-on-focus></textarea>
+            </md-input-container>
+         </div>  
+
+     <div layout="row">
+           <md-checkbox ng-model="obj.isDealFloat">
+               Would you like to float the deals to actual users ? 
+            </md-checkbox>
+      </div>      
+
+           
+
+       
+
+
+      
+      </div>
+      <md-button type="button" ng-click="reset()">RESET</md-button>
+       <md-button ng-show="loadProgressBarAddButton">
+          <md-progress-circular style="margin: auto "  class="md-hue-2" md-diameter="20px"></md-progress-circular>
+       </md-button>
+      <md-button ng-hide="loadProgressBarAddButton" class="md-primary" ng-disabled="myForm.$invalid" ng-click="submit()">SUBMIT</md-button>
+      </div>
+    </form>
+ <!--  </md-card-content>
+</md-card>
+</md-content> -->
+
 </div>
-
-<div layout="row" id="radioOptions">
-          <md-radio-group ng-model="radioGroup" >
-        <md-radio-button ng-value="true" class="md-primary" >Reporting Live</md-radio-button>
-          <md-radio-button ng-value="false"  class="md-primary"> Homework </md-radio-button>
-          
-
-    </md-radio-group>
-    </div>
-
-  <div layout="row" id="adminname">
-      <md-input-container flex="50">
-        <md-select name="myselect" id="myselect"  placeholder="Select Admin Name" ng-model="obj.adminName" ng-required="true">
-          <md-option ng-repeat="admin in adminsName" ng-value="admin">{{admin}}</md-option>
-        </md-select>
-      </md-input-container>
-   
-    </div>
-
-    <div layout="row" id="clientDesc">
-    <md-input-container >
-          <label>Client Name</label>
-          <input md-maxlength="30" required name="name" ng-model="obj.clientName" />
-          <div class="hint">Tell us what we should call you!</div>
-    </md-input-container>
-
-      <md-input-container >
-          <label>Course Number</label>
-          <input md-maxlength="30"  name="courseNumber" ng-model="obj.courseNumber" />
-          <div class="hint">Enter Course number</div>
-    </md-input-container>
-
-      <md-input-container flex="40">
-          <label>Subject Name</label>
-          <md-select name="type" ng-model="obj.subjectName"  >
-            <md-option ng-repeat="subName in subjectNameArray track by $index" ng-value="subName">{{subName}}</md-option>
-          </md-select>
-        </md-input-container>
-   </div>
-
-
-     <div layout="row" id="startTimeEndTime">
-     <div ng-hide="!radioGroup">
-     	
-     	<md-input-container >
-        <input moment-picker="ctrl.timepicker1" ng-model="startTime" ng-model-options="{ updateOn: 'blur' }" format="DD-MM-YYYY HH:mm" placeholder="Start Time">
-     	</md-input-container>
-     	</div>
-     <div >
-
-     	<md-input-container>
-        <input moment-picker="ctrl.timepicker" ng-model="endTime" ng-model-options="{ updateOn: 'blur' }" format="DD-MM-YYYY HH:mm" placeholder="End Time">
-     	</md-input-container>
-     	</div>
-
-     	 <md-input-container flex = "20">
-	      <label>Duration </label>
-	    <input type="number" step="5" name="rate" ng-model="duration" min="10" max="200"  />   
-         </md-input-container>	
-     	
-	 
-    </div> 
-    
-     <div layout="row" id="bookName">
-	    <md-input-container flex="50" >
-	          <label>Book Name </label>
-	          <input md-maxlength="100"  name="name" ng-model="obj.bookName" />
-	          <div class="hint">Tell us where to read!</div>
-	    </md-input-container>
-    
-    
-      <span class="currencyinput" style="font-size: 10px">&#8377; </span>
-	    <md-input-container >
-	          <label>Amount </label>
-	          <input min="0" type="number" step="100" ng-model="obj.amount" />
-	          <div class="hint">How much to pay!</div>
-	    </md-input-container>
-	   
-	</div> 
-
-	 <div layout="row" id="typeOfExam">
-	  <md-input-container flex="20">
-        <md-select name="typeOfExam1" id="typeOfExam1" placeholder="Select The type of Exam" ng-model="obj.examType">
-          <md-option ng-repeat="etype in examType" ng-value="etype">{{etype}}</md-option>
-        </md-select>
-
-       
-        </md-select>
-      </md-input-container>
-
-       <md-input-container  >
-	          <label>Amount told </label>
-	          <input min="0" type="number" step="100" ng-model="obj.priceTold" />
-	          <div class="hint">How much user pay!</div>
-	    </md-input-container>
-
-       <md-input-container>
-            <label>Amount Received </label>
-            <input min="0"  type="number" step="100" ng-model="obj.priceReceived" />
-            <div class="hint">How much user sent?</div>
-      </md-input-container>
-	 </div>  
-
-	  <div layout="row" id="numberOfTutor">
-	    <md-input-container flex = "20" >
-	      <label>Number of Tutor Required </label>
-	    <input  type="number" step="1" name="rate" ng-model="numberOfTutors" min="1"
-               max="5"  />  
-               
-         </md-input-container>	
-         <md-input-container class= "reviewText" ng-hide="numberRev == null" flex = "15" ng-repeat="a in range(numberOfReviewsTextBox) track by $index">
-           <label>Rating {{$index + 1}} </label>
-          <input  type="number" step="0.2" name="rate" ng-model="reviewRequired[$index]" min="1"
-               max="5"  />  
-               </md-input-container>
-               </div>
-
-  
-
-     <div layout="row" id="commentMaterial">
-         <md-input-container flex="100" >
-          <label>Comment and Material</label>
-          <textarea ng-model="obj.materialComment" md-maxlength="300" rows="5" md-select-on-focus></textarea>
-        </md-input-container>
-     </div>  
-
-      <div layout="row" id="adminNote">
-         <md-input-container flex="100" >
-          <label>Note For admins</label>
-          <textarea ng-model="obj.note" md-maxlength="300" rows="3" md-select-on-focus></textarea>
-        </md-input-container>
-     </div>  
-
- <div layout="row">
-       <md-checkbox ng-model="obj.isDealFloat">
-           Would you like to float the deals to actual users ? 
-        </md-checkbox>
-  </div>      
-
-       
-
-   
-
-
-  
-  </div>
-  <md-button type="button" ng-click="reset()">RESET</md-button>
-  <md-button class="md-primary" ng-disabled="myForm.$invalid" ng-click="submit()">SUBMIT</md-button>
-  </div>
-</form>
-</md-card-content>
-
-
-
-        </md-card>
-    </div>
-</md-content>
