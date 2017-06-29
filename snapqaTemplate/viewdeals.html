@@ -11,7 +11,7 @@
   <md-datepicker ng-model="myDate" md-placeholder="Enter date" md-open-on-focus></md-datepicker>
   <md-button class="md-hue-1" ng-click="getDate();">SUBMIT</md-button>
   <md-button class="md-hue-1" href="#/adddeals">Add Deals</md-button>
-  <md-button class="md-hue-1" href="#/userrating">User Ratings</md-button>
+  <md-button class="md-hue-1" href="#/userratings">User Ratings</md-button>
 
   </div>
 </md-toolbar>  
@@ -58,17 +58,17 @@
   <table md-table >
     <thead md-head md-order="liveOrder">
       <tr md-row>
-        <th md-column md-order-by="createdAt">Start Time</th>
+        <th md-column ><span>Status</span></th>
+        <th md-column md-order-by="isFloating"><span>Float</span></th>
+        <th md-column ><span>Admin</span></th>
+        <th md-column md-order-by="timeFrom">Start Time</th>
         <th md-column md-order-by="timeTo">End Time</th>
-        <th md-column ><span>Deal Status Color</span></th>
-        <th md-column md-numeric >Duration (min)</th>
-        <th md-column >Exam Type</th>
-        <th md-column ><span>Admin Name</span></th>
+        <th md-column md-numeric >Duration</th>
         <th md-column >Client Name</th>
-        <th md-column md-numeric>Number of Tutors</th>
         <th md-column ><span>Subject (Course Name)</span></th>
+        <th md-column md-numeric>Tutors Name and Rating</th>
         <!-- <th md-column md-numeric md-order-by="amount">Price Told (₹)</th> -->
-        <th md-column md-order-by="priceReceived">Price Received ($)</th>
+        <th md-column md-order-by="priceReceived">Price/Received</th>
         <th md-column >Comment</th>
         
         
@@ -78,21 +78,26 @@
     </thead>
     <tbody md-body >
       <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
-        <td md-cell>{{data.timeFromFormat}}</td>
-        <td md-cell>{{data.timeToFormat}}</td>
         <td md-cell><md-button class="md-icon-button">
           <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
           <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
           </md-button>
         </td>
-        <td md-cell>{{data.duration}}</td>
-        <td md-cell>{{data.dealType}}</td>
+        <td md-cell><md-icon style="color:green;" ng-show="data.isFloating">done_all</md-icon>
+        <md-icon style="color:red;" ng-hide="data.isFloating">not_interested</md-icon> </td>
         <td md-cell>{{data.adminName}}</td>
+        <td md-cell>{{data.timeFromFormat}}</td>
+        <td md-cell>{{data.timeToFormat}}</td>
+        <td md-cell>{{data.duration}}</td>
         <td md-cell>{{data.clientName}}</td>
-        <td md-cell>{{data.ratingArray.length}}</td>
         <td md-cell>{{data.subjectName}}</td>
+
+        <td md-cell><div ng-repeat="d in data.contributor">
+          <div class="borderexample">{{d.userName}}</div>
+          <md-tooltip>Rating is : {{d.rating}}</md-tooltip> 
+        </td>
         <!-- <td md-cell>{{data.amount}}</td> -->
-        <td md-cell>{{data.priceReceived}}</td>
+        <td md-cell>{{data.amount?data.amount:"0"}} /   {{data.priceReceived ? data.priceReceived:"0"}}</td>
         <td md-cell>{{data.materialComment}}</td>
       </tr>
     </tbody>
@@ -157,7 +162,7 @@
 
   </table>
 </md-table-container>    
-<md-table-pagination md-limit="query1.limit" md-limit-options="[3, 6, 9]" md-page="query1.page" md-total="{{deadlineData.length}}"  md-page-select></md-table-pagination>
+<md-table-pagination md-limit="query1.limit" md-limit-options="[9, 18, 27]" md-page="query1.page" md-total="{{deadlineData.length}}"  md-page-select></md-table-pagination>
 
         </md-content>
         </md-tab>

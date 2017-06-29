@@ -71,6 +71,24 @@
     </div>
     -->
 
+    <div layout="row">
+      <md-input-container>
+        <input moment-picker="ctrl.timepicker1" ng-model="startDate" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
+      </md-input-container>
+     
+
+      <md-input-container>
+        <input moment-picker="ctrl.timepicker" ng-model="endTime" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
+      </md-input-container>
+     
+
+       <md-input-container flex = "20">
+        <label>Duration </label>
+      <input required type="number" step="5" name="rate" ng-model="data.duration" min="10"
+               />   
+         </md-input-container>  
+    </div>
+
   		
           <md-radio-group ng-model="radioGroupModel">
      	  <md-radio-button ng-value="true" >Reporting live</md-radio-button>
@@ -132,11 +150,12 @@
         </div>    
 
     <div layout="row" ng-hide="data.contributor.length == 0">
-      <md-chips ng-repeat = "user in data.contributor">
-        <md-chip>{{user.userName}}
-        <md-tooltip>Rating : {{user.rating}}  </md-tooltip>
-        </md-chip>
-      </md-chips>
+      <h4> Users : </h4>
+      <div ng-repeat = "user in data.contributor">
+          <div class="borderexample">{{user.userName}}</div>
+          <md-tooltip>Rating is : {{user.rating}}</md-tooltip> 
+      </div>
+       
     </div>        
               
 
@@ -148,6 +167,12 @@
           <textarea ng-model="data.materialComment" md-maxlength="300" rows="5" md-select-on-focus></textarea>
         </md-input-container>
         </div>
+
+         <div layout="row">
+           <md-checkbox ng-model="data.isFloating">
+               Would you like to float the deals to actual users ? 
+            </md-checkbox>
+      </div>     
      
 
        

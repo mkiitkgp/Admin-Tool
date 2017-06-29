@@ -61,6 +61,10 @@ app.config(['$routeProvider',
             templateUrl: 'snapqaTemplate/viewdeals.html',
             controller: 'viewdealsController'
         }).
+        when('/userratings' ,{
+            templateUrl:'snapqaTemplate/userrating.html',
+            controller:'userratingController'
+        }).
         otherwise({
             redirectTo: '/adddeals'
         });
@@ -358,7 +362,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                     value["timeToFormat"] = moment(value.timeTo).format('DD-MM-YYYY HH:mm');
                 }
                 if (value.createdAt != undefined) {
-                    value["timeFromFormat"] = moment(value.createdAt).format('DD-MM-YYYY HH:mm');
+                    value["timeFromFormat"] = moment(value.timeFrom).format('DD-MM-YYYY HH:mm');
                 }
                 $rootScope.liveSession.push(value);
             }
@@ -395,13 +399,13 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
             
 
     $scope.query = {
-        order: 'createdTime',
-        limit: 3,
+        order: 'timeFrom',
+        limit: 9,
         page: 1
     };
     $scope.query1 = {
         order: 'timeTo',
-        limit: 3,
+        limit: 9,
         page: 1
     };
 
@@ -637,6 +641,10 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
             }
         }, true);
 
+        $scope.startDate = moment($scope.data.timeFrom , moment.ISO_8601);
+        $scope.endTime = moment($scope.data.timeTo , moment.ISO_8601);
+
+
         //  $scope.$watch('data.numberOfTutor', function(newVal, oldVal){
         //     if(newVal != undefined){
         //         console.log("change in value " + newVal);  
@@ -709,6 +717,10 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
             } else {
                 $scope.loadProgressBar = true;
+                $scope.data.timeFrom = moment($scope.startTime).toISOString();
+                $scope.data.timeTo = moment($scope.endTime).toISOString();
+                $scope.data.timeFromFormat = moment($scope.startTime).format('DD-MM-YYYY HH:mm');
+                $scope.data.timeToFormat = moment($scope.endTime).format('DD-MM-YYYY HH:mm');
                 $scope.editFormApiCall($scope.data);
             }
         };
@@ -716,3 +728,28 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
     // body...
 })
+
+app.controller('userratingController', function($scope, $http, $timeout, $rootScope, $mdDialog, GetOverallDataService) { 
+
+    $scope.radiochoice = "nonrated";
+
+     $scope.$watch('radiochoice', function(newVal, oldVal) {
+
+            if(newVal == "userbased"){
+                // do something for user based
+                console.log($scope.radiochoice);
+            }
+            else{
+                // do something for non rated based
+                 console.log($scope.radiochoice);
+            }
+
+     });
+
+
+
+
+
+
+
+});

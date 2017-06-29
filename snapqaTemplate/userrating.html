@@ -1,0 +1,25 @@
+<div id="put" style="margin:8px 8px 8px 8px;" >
+
+<md-toolbar>
+  <div class="md-toolbar-tools">
+
+  <a flex md-truncate style="font-size: 18px;font-weight: 500;" href="#/viewdeals" >USER RATING</a>
+ 
+  <md-button class="md-hue-1" ng-click="getDate();">SUBMIT</md-button>
+  <md-button class="md-hue-1" href="#/adddeals">Add Deals</md-button>
+  <md-button class="md-hue-1" href="#/userrating">User Ratings</md-button>
+
+  </div>
+</md-toolbar>  
+
+<div id="borderForm" class="well well-lg bs-loading-container" bs-loading-overlay style="padding:8px;"  >
+   <md-radio-group ng-model="radiochoice" layout="row">
+        <md-radio-button value="nonrated" >Non Rated Deals</md-radio-button>
+        <md-radio-button value="userbased" > User Based Rating</md-radio-button>
+   </md-radio-group>
+
+
+
+  </div>
+
+</div>

@@ -57,3 +57,13 @@ right: 16px;
 .md-datepicker-input-container{
     border-bottom-color:white;
 }
+
+.borderexample
+{   
+    padding: 3px;
+    border-style: solid;
+    border-color: #287EC7;
+    text-align: center;
+    border-width: 1px;
+    margin: 10px 0px 10px 20px;
+}
