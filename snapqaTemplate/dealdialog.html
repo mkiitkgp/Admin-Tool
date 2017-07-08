@@ -37,7 +37,7 @@
           <div class="hint">Enter Course number</div>
     </md-input-container>
 
-      <md-input-container flex="30" >
+      <md-input-container flex="40" >
           <label>Subject Name</label>
           <md-select name="type" ng-model="data_deadline.subjectName"  >
             <md-option ng-repeat="subName in subjectNameArray track by $index" ng-value="subName">{{subName}}</md-option>
@@ -45,31 +45,6 @@
         </md-input-container>
         </div>
   
-
-<!--
-   
-     <div ng-hide="!radioGroup">
-     	
-     	<md-input-container >
-        <input moment-picker="ctrl.timepicker1" ng-model="obj.timefrom" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
-     	</md-input-container>
-     	</div>
-     <div >
-
-     	<md-input-container>
-        <input moment-picker="ctrl.timepicker" ng-model="obj.timeto" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
-     	</md-input-container>
-     	</div>
-
-     	 <md-input-container flex = "20">
-	      <label>Duration </label>
-	    <input required type="number" step="5" name="rate" ng-model="data.duration" min="10"
-               max="200"  />   
-         </md-input-container>	
-     	
-	 
-    </div>
-    -->
 
   		
           <md-radio-group ng-model="radioGroupModel">
@@ -95,18 +70,27 @@
 	          <input  type="number" step="100" ng-model="data_deadline.amount" />
 	          <div class="hint">How much to pay!</div>
 	    </md-input-container>
-	     <md-input-container ng-show="!radioGroupModel" >
-	          <label>Amount told </label>
-	          <input  type="number" step="100" ng-model="data_deadline.amounttoldToPay" />
-	          <div class="hint">How much user pay!</div>
-	    </md-input-container>
 	    </div>
+
+      <div layout="row">
+      <md-input-container >
+                <label>Price told </label>
+                <input min="0" type="number" step="100" ng-model="data_deadline.priceTold" />
+                <div class="hint">Tutor payment!</div>
+          </md-input-container>
+
+           <md-input-container flex="40">
+                <label>Price Received </label>
+                <input  ng-model="data_deadline.priceReceived" />
+                <div class="hint">Money Received from the client?</div>
+          </md-input-container>
+      </div>
 	
 
 	<div layout="row">
 	  <md-input-container flex="100">
 	  <label>Select The type of Exam</label>
-        <md-select name="type" ng-model="data_deadline.examtype" ng-required="true">
+        <md-select name="type" ng-model="data_deadline.examType" ng-required="true">
           <md-option ng-repeat="etype in examTypePreFilled" ng-value="etype">{{etype}}</md-option>
         </md-select>
 
@@ -131,14 +115,16 @@
                </md-input-container>
         </div>    
 
-    <div layout="row" ng-hide="data_deadline.contributor.length == 0">
-     
-      <md-chips ng-repeat = "user in data_deadline.contributor">
-        <md-chip>{{user.userName}}
-        <md-tooltip>Rating : {{user.rating}}  </md-tooltip>
-        </md-chip>
-      </md-chips>
-    </div>       
+       
+
+     <div layout="row" ng-hide="data_deadline.contributor.length == 0">
+      <h4> Users : </h4>
+      <div ng-repeat = "user in data_deadline.contributor">
+          <div class="borderexample">{{user.userName}}</div>
+          <md-tooltip>Rating is : {{user.rating}}</md-tooltip> 
+      </div>
+       
+    </div>          
               
 
   
@@ -149,6 +135,12 @@
           <textarea ng-model="data_deadline.materialComment" md-maxlength="300" rows="5" md-select-on-focus></textarea>
         </md-input-container>
         </div>
+
+         <div layout="row">
+           <md-checkbox ng-model="data_deadline.isFloating">
+               Would you like to float the deals to actual users ? 
+            </md-checkbox>
+      </div>  
      
 
        

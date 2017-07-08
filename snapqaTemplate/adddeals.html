@@ -36,7 +36,7 @@
 
         <div layout="row" id="clientDesc">
 
-        <md-input-container >
+        <md-input-container flex="30">
               <label>Client Name</label>
              
               <input md-maxlength="30" required name="name" ng-model="obj.clientName" />
@@ -53,6 +53,9 @@
            <md-item-template>
             <span md-highlight-text="searchText">{{subName}}</span>
           </md-item-template>
+          <md-not-found>
+          No subject Found !! Ask Admin to add it
+        </md-not-found>
         </md-autocomplete>
 
           <!-- <md-input-container flex="40">
@@ -116,13 +119,13 @@
             </md-select>
           </md-input-container>
 
-           <md-input-container  >
+           <md-input-container  flex="20">
     	          <label>Price told </label>
     	          <input min="0" type="number" step="100" ng-model="obj.priceTold" />
     	          <div class="hint">Tutor payment!</div>
     	    </md-input-container>
 
-           <md-input-container>
+           <md-input-container flex="20">
                 <label>Price Received </label>
                 <input min="0"  type="number" step="100" ng-model="obj.priceReceived" />
                 <div class="hint">Money Received from the client?</div>

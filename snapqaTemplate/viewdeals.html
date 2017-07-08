@@ -59,7 +59,6 @@
     <thead md-head md-order="liveOrder">
       <tr md-row>
         <th md-column ><span>Status</span></th>
-        <th md-column md-order-by="isFloating"><span>Float</span></th>
         <th md-column ><span>Admin</span></th>
         <th md-column md-order-by="timeFrom">Start Time</th>
         <th md-column md-order-by="timeTo">End Time</th>
@@ -67,6 +66,7 @@
         <th md-column >Client Name</th>
         <th md-column ><span>Subject (Course Name)</span></th>
         <th md-column md-numeric>Tutors Name and Rating</th>
+        <th md-column md-order-by="isFloating"><span>Float</span></th>
         <!-- <th md-column md-numeric md-order-by="amount">Price Told (₹)</th> -->
         <th md-column md-order-by="priceReceived">Price/Received</th>
         <th md-column >Comment</th>
@@ -83,8 +83,7 @@
           <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
           </md-button>
         </td>
-        <td md-cell><md-icon style="color:green;" ng-show="data.isFloating">done_all</md-icon>
-        <md-icon style="color:red;" ng-hide="data.isFloating">not_interested</md-icon> </td>
+       
         <td md-cell>{{data.adminName}}</td>
         <td md-cell>{{data.timeFromFormat}}</td>
         <td md-cell>{{data.timeToFormat}}</td>
@@ -96,6 +95,8 @@
           <div class="borderexample">{{d.userName}}</div>
           <md-tooltip>Rating is : {{d.rating}}</md-tooltip> 
         </td>
+        <td md-cell><md-icon style="color:green;" ng-show="data.isFloating">done_all</md-icon>
+        <md-icon style="color:red;" ng-hide="data.isFloating">not_interested</md-icon> </td>
         <!-- <td md-cell>{{data.amount}}</td> -->
         <td md-cell>{{data.amount?data.amount:"0"}} /   {{data.priceReceived ? data.priceReceived:"0"}}</td>
         <td md-cell>{{data.materialComment}}</td>
@@ -126,35 +127,42 @@
   <table md-table >
     <thead md-head md-order="myOrder">
       <tr md-row>
-        <th md-column md-order-by="timeTo"><span>End Time</span></th>
-        <th md-column ><span>Exam Type</span></th>
-        <th md-column ><span>Deal Status Color</span></th>
-        <th md-column >Admin Name </th>
+        <th md-column ><span>Status</span></th>
+        <th md-column ><span>Admin</span></th>
+        <th md-column md-order-by="timeTo">End Time</th>
+        <th md-column md-numeric >Duration</th>
         <th md-column >Client Name</th>
-        <th md-column >Tutors Assigned</th>
-        <th md-column >Subject Name (Course Name)</th>
-        <th md-column md-numeric >Price Told (₹)</th>
-        <th md-column >Price Received ($)</th>
-        <th md-column md-order-by="amount">Amount (₹)</th>
+        <th md-column ><span>Subject (Course Name)</span></th>
+        <th md-column md-numeric>Tutors Name and Rating</th>
+        <th md-column md-order-by="isFloating"><span>Float</span></th>
+        <!-- <th md-column md-numeric md-order-by="amount">Price Told (₹)</th> -->
+        <th md-column md-order-by="priceReceived">Price/Received</th>
         <th md-column >Comment</th>
       </tr>
     </thead>
     <tbody md-body>
       <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | filter:deadlineSearchText| orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
-        <td md-cell>{{data.timeToFormat}}</td>
-        <td md-cell>{{data.dealType}}</td>
         <td md-cell><md-button class="md-icon-button">
           <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
           <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
           </md-button>
         </td>
+       
         <td md-cell>{{data.adminName}}</td>
+        <td md-cell>{{data.timeToFormat}}</td>
+        <td md-cell>{{data.duration}}</td>
         <td md-cell>{{data.clientName}}</td>
-        <td md-cell>{{data.ratingArray.length}}</td>
-        <td md-cell>{{data.subjectName}} ({{data.courseNumber}})</td>
-        <td md-cell>{{data.priceTold}}</td>
-        <td md-cell>{{data.priceReceived}}</td>
-        <td md-cell>{{data.amount}}</td>
+        <td md-cell>{{data.subjectName}}</td>
+
+        <td md-cell><div ng-repeat="d in data.contributor">
+          <div class="borderexample">{{d.userName}}</div>
+          <md-tooltip>Rating is : {{d.rating}}</md-tooltip> 
+        </td>
+
+         <td md-cell><md-icon style="color:green;" ng-show="data.isFloating">done_all</md-icon>
+        <md-icon style="color:red;" ng-hide="data.isFloating">not_interested</md-icon> </td>
+        <!-- <td md-cell>{{data.amount}}</td> -->
+        <td md-cell>{{data.amount?data.amount:"0"}} /   {{data.priceReceived ? data.priceReceived:"0"}}</td>
         <td md-cell>{{data.materialComment}}</td>
 
       </tr>

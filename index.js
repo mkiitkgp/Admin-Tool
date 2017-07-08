@@ -45,7 +45,7 @@ MyNameSpace.helpers = {
     }
 }
 
-var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs']);
+var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs',"angucomplete-alt"]);
 
 
 
@@ -130,7 +130,7 @@ app.service("ViewAllDealsService", function($http, $q) {
     }
 });
 
- app.service("viewDealOnDateService", function ($http, $q) {
+app.service("viewDealOnDateService", function ($http, $q) {
        
         this.viewDealonDay = function (inputdate) {
             var parameter = JSON.stringify({"date":inputdate});
@@ -155,6 +155,7 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
 
 
     var overallData;
+    //var self = this;
 
     var lookup = GetOverallDataService.getService();
     lookup.then(function(data) {
@@ -164,7 +165,7 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
         $scope.adminsName = overallData.adminList;
         $rootScope.examType = overallData.examType["ReportingLive"];
         $scope.subjectNameArray = overallData.subjectList;
-
+        //self.subjectNameArrayEx = $scope.subjectNameArray
         $scope.$watch('radioGroup', function(newVal, oldVal) {
 
             console.log(newVal);
@@ -188,6 +189,18 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
     $scope.reviewRequired = [];
     $scope.radioGroup = true;
 
+    // function querySearch (query) {
+    //   return query ? .subjectNameArray.filter( createFilterFor(query) ) : $scope.subjectNameArray;
+    // }
+
+    // function createFilterFor(query) {
+    //   var lowercaseQuery =query;
+
+    //   return function filterFn(subjectNameArrayEx) {
+    //     return (subjectNameArrayEx.indexOf(lowercaseQuery) === 0);
+    //   };
+
+    // }
 
    
 
@@ -359,10 +372,10 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
             } else {
                 if (value.timeTo != undefined) {
-                    value["timeToFormat"] = moment(value.timeTo).format('DD-MM-YYYY HH:mm');
+                    value["timeToFormat"] = moment(value.timeTo).format('HH:mm');
                 }
                 if (value.createdAt != undefined) {
-                    value["timeFromFormat"] = moment(value.timeFrom).format('DD-MM-YYYY HH:mm');
+                    value["timeFromFormat"] = moment(value.timeFrom).format('HH:mm');
                 }
                 $rootScope.liveSession.push(value);
             }
@@ -463,7 +476,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         console.log("coming inside Live ");
         $mdDialog.show({
                 controller: DialogControllerLive,
-                templateUrl: 'snapqaTemplate/dealdialogLive.html',
+                templateUrl: 'snapqaTemplate/dealdialoglive.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
@@ -523,7 +536,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
             } else {
                 $scope.examTypePreFilled = [];
-                $scope.examTypePreFilled = overalldata.examType["Deadline"];
+                $scope.examTypePreFilled = overalldata.examType["Deaddline"];
             }
         }, true);
 
@@ -626,7 +639,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
             $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
 
         } else {
-            $scope.examTypePreFilled = overalldata.examType["Deadline"];
+            $scope.examTypePreFilled = overalldata.examType["Deaddline"];
         }
 
         $scope.$watch('radioGroupModel', function(newVal, oldVal) {

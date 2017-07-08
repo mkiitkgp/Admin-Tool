@@ -36,8 +36,10 @@
           <input md-maxlength="30" required name="courseNumber" ng-model="data.courseNumber" />
           <div class="hint">Enter Course number</div>
     </md-input-container>
+        </div>
 
-      <md-input-container flex="30" >
+        <div layout="row">
+         <md-input-container flex >
           <label>Subject Name</label>
           <md-select name="type" ng-model="data.subjectName"  >
             <md-option ng-repeat="subName in subjectNameArray track by $index" ng-value="subName">{{subName}}</md-option>
@@ -46,30 +48,7 @@
         </div>
   
 
-<!--
-   
-     <div ng-hide="!radioGroup">
-     	
-     	<md-input-container >
-        <input moment-picker="ctrl.timepicker1" ng-model="obj.timefrom" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="Start Time">
-     	</md-input-container>
-     	</div>
-     <div >
 
-     	<md-input-container>
-        <input moment-picker="ctrl.timepicker" ng-model="obj.timeto" ng-model-options="{ updateOn: 'blur' }" format="YYYY-MM-DD HH:mm" placeholder="End Time">
-     	</md-input-container>
-     	</div>
-
-     	 <md-input-container flex = "20">
-	      <label>Duration </label>
-	    <input required type="number" step="5" name="rate" ng-model="data.duration" min="10"
-               max="200"  />   
-         </md-input-container>	
-     	
-	 
-    </div>
-    -->
 
     <div layout="row">
       <md-input-container>
@@ -100,31 +79,41 @@
      
     
     <div layout="row">
-	    <md-input-container  >
+	    <md-input-container  flex="50">
 	          <label>Book Name </label>
 	          <input md-maxlength="100"  name="name" ng-model="data.bookName" />
 	          <div class="hint">Tell us where to read!</div>
 	    </md-input-container>
     
     
-      <span class="currencyinput" style="font-size: 10px">&#8377; </span>
+      
 	    <md-input-container >
 	          <label>Amount </label>
 	          <input  type="number" step="100" ng-model="data.amount" />
-	          <div class="hint">How much to pay!</div>
+	          <div class="hint">How much client will pay !</div>
 	    </md-input-container>
-	     <md-input-container ng-show="!radioGroupModel" >
-	          <label>Amount told </label>
-	          <input  type="number" step="100" ng-model="data.amounttoldToPay" />
-	          <div class="hint">How much user pay!</div>
-	    </md-input-container>
+
 	    </div>
+
+      <div layout="row">
+      <md-input-container >
+                <label>Price told </label>
+                <input min="0" type="number" step="100" ng-model="data.priceTold" />
+                <div class="hint">Tutor payment!</div>
+          </md-input-container>
+
+           <md-input-container flex="40">
+                <label>Price Received </label>
+                <input  ng-model="data.priceReceived" />
+                <div class="hint">Money Received from the client?</div>
+          </md-input-container>
+      </div>
 	
 
 	<div layout="row">
 	  <md-input-container flex="100">
 	  <label>Select The type of Exam</label>
-        <md-select name="type" ng-model="data.examtype" ng-required="true">
+        <md-select name="type" ng-model="data.examType" ng-required="true">
           <md-option ng-repeat="etype in examTypePreFilled" ng-value="etype">{{etype}}</md-option>
         </md-select>
 
