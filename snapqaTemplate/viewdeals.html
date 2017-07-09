@@ -79,8 +79,8 @@
     <tbody md-body >
       <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
         <td md-cell><md-button class="md-icon-button">
-          <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
-          <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
+          <md-tooltip>{{data.statusMsg}}</md-tooltip>
+          <md-icon style="color:{{data.statusColor}};">stop</md-icon> 
           </md-button>
         </td>
        
@@ -143,8 +143,8 @@
     <tbody md-body>
       <tr ng-click="showAdvanced($event,data)" md-row ng ng-repeat="data in deadlineData | filter:deadlineSearchText| orderBy:myOrder | limitTo: query1.limit : (query1.page -1) * query1.limit" >
         <td md-cell><md-button class="md-icon-button">
-          <md-tooltip>{{data.statusObj.statusMsg}}</md-tooltip>
-          <md-icon style="color:{{data.statusObj.statusColor}};">stop</md-icon> 
+          <md-tooltip>{{data.statusMsg}}</md-tooltip>
+          <md-icon style="color:{{data.statusColor}};">stop</md-icon> 
           </md-button>
         </td>
        

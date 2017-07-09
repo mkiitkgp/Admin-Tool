@@ -45,7 +45,7 @@ MyNameSpace.helpers = {
     }
 }
 
-var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs',"angucomplete-alt"]);
+var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs']);
 
 
 
@@ -83,6 +83,12 @@ app.config(function($mdThemingProvider) {
 
     $mdThemingProvider.theme('green')
         .primaryPalette('green');
+
+    $mdThemingProvider.theme('orange') 
+        .primaryPalette('orange');
+
+    $mdThemingProvider.theme('pink')
+        .primaryPalette('pink');       
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
@@ -296,7 +302,8 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
         }
 
         $scope.obj.duration = $scope.duration.toString();
-        $scope.obj.statusCode = 100;
+        $scope.obj.statusMsg = "Client didn't send the questions";
+        //$scope.obj.statusCode = 100;
         console.log($scope.obj);
       
 
@@ -342,7 +349,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                         function success(data) {
                             console.log(data.data);
                             //plotProducts(data);
-                             $scope.dataSeperator(data.data);
+                             $scope.dataSeperator(data.data,$rootScope.raw_overall_data);
 
                              bsLoadingOverlayService.stop();
                         },
@@ -356,7 +363,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
 
 
-    $scope.dataSeperator = function(data) {
+    $scope.dataSeperator = function(data , overallData) {
         $rootScope.deadlineData = [];
         $rootScope.liveSession = [];
 
@@ -366,25 +373,46 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 if (value.timeTo != undefined) {
                     value["timeToFormat"] = moment(value.timeTo).format('DD-MM-YYYY HH:mm');
                 }
+                $scope.statusColor = "orange"
+                angular.forEach(overallData.dealStatus , function(v , k){
+                     if(value.statusMsg != undefined){
+                  if(v.status == value.statusMsg){
+                    $scope.statusColor  = v.color
+                    }
+                }
+                })
+            value['statusColor'] = $scope.statusColor
+                
                 $rootScope.deadlineData.push(value);
 
                 //var dateMonthAsWord = moment("2014-02-27T10:00:00").format('DD-MMM-YYYY');
-
             } else {
                 if (value.timeTo != undefined) {
                     value["timeToFormat"] = moment(value.timeTo).format('HH:mm');
                 }
-                if (value.createdAt != undefined) {
+                if (value.timeFrom != undefined) {
                     value["timeFromFormat"] = moment(value.timeFrom).format('HH:mm');
                 }
+                $scope.statusColor = "orange"
+                angular.forEach(overallData.dealStatus , function(v , k){
+                    if(value.statusMsg != undefined){
+                  if(v.status == value.statusMsg){
+                    $scope.statusColor  = v.color
+                    }
+                }
+                })
+                value['statusColor'] = $scope.statusColor
                 $rootScope.liveSession.push(value);
             }
 
-            value["numberOfTutors"] = value.ratingArray.length;
+           
 
-            value["statusCode"] = value.statusCode;
-            $scope.statusObj = MyNameSpace.helpers.getStatusName(value.statusCode);
-            value['statusObj'] = $scope.statusObj;
+            //value["numberOfTutors"] = value.ratingArray.length;
+
+            //value["statusCode"] = value.statusCode;
+           
+            // $scope.statusObj = MyNameSpace.helpers.getStatusName(value.statusCode);
+            // value['statusColor'] = $scope.statusObj;
         });
 
         console.log($rootScope.deadlineData);
@@ -396,16 +424,38 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
     var lookup = ViewAllDealsService.getService();
     lookup.then(function(data) {
         $rootScope.raw_data = data.data;
-        $scope.dataSeperator(data.data);
+       
         $scope.copyOriginalData = angular.copy(data.data);
         var overAlldata = GetOverallDataService.getService();
         overAlldata.then(function(data) {
             $rootScope.raw_overall_data = data.data;
+            $scope.dataSeperator($rootScope.raw_data , $rootScope.raw_overall_data);
             console.log($rootScope.raw_overall_data);
 
         })
 
     });
+
+    $scope.$on("updateData",function(){
+       // Post your code
+        var lookup = ViewAllDealsService.getService();
+        lookup.then(function(data) {
+        $rootScope.raw_data = data.data;
+       
+        $scope.copyOriginalData = angular.copy(data.data);
+        var overAlldata = GetOverallDataService.getService();
+        overAlldata.then(function(data) {
+            $rootScope.raw_overall_data = data.data;
+            $scope.dataSeperator($rootScope.raw_data , $rootScope.raw_overall_data);
+            console.log($rootScope.raw_overall_data);
+
+        })
+
+        });
+    });
+    
+
+
     //YY-MM-DD
    
                 
@@ -500,15 +550,20 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         // console.log( overalldata);
         // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
 
-        $scope.statusMessage = ["Not Yet Assigned Tutor", "Tutor Assigned but not yet Confirmed", "Tutor Confirmed , Deal Ongoing", "Tutor does not solve", "Client Side error", "Got Answer , Not payment not Done", "Payment Done Finally"];
+        //$scope.statusMessage = ["Not Yet Assigned Tutor", "Tutor Assigned but not yet Confirmed", "Tutor Confirmed , Deal Ongoing", "Tutor does not solve", "Client Side error", "Got Answer , Not payment not Done", "Payment Done Finally"];
         $scope.data_deadline = items;
         $scope.data_deadline_copy = angular.copy($scope.data_deadline);
-        console.log($scope.data_deadline);
+       
 
-        $scope.users = [{ name: "Mohit Kushwaha", phone: "7338496008" }, { name: "abhishek kumar", phone: "7501384719" }];
-        // to input the status statusMsg
-        $scope.statusObj = MyNameSpace.helpers.getStatusName($scope.data_deadline.statusCode);
-        console.log($scope.statusObj);
+        $scope.statusMessage = []
+        $scope.statusColor = "Orange"
+        $scope.statusObj = overalldata.dealStatus
+        angular.forEach($scope.statusObj , function(value,key){
+            $scope.statusMessage.push(value.status);
+            if(value.status == $scope.data_deadline.statusMsg){
+                $scope.statusColor = value.color
+            }
+        })
         //$scope.theme = $scope.statusObj.statusColor;
         // $scope.statusMessageText = $scope.statusObj.statusMsg;
 
@@ -563,6 +618,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                     if (!data.error) {
                         $mdDialog.cancel();
                         $scope.showSimpleToast("Your Deal is Edited Successfully");
+                        $rootScope.$broadcast('updateData');
                     }
                 })
                 .error(function(data, status, headers, config) {
@@ -611,23 +667,25 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         $scope.adminsName = overalldata.adminList;
         $scope.subjectNameArray = overalldata.subjectList;
 
-        // console.log( overalldata);
-        // $scope.subjectNameArray = ["Dynamics","Material Science" ,"Manufacturing","MOM","Organic Chemistry","Measurements","Engineering Eco","Control System"];
-
-        $scope.statusMessage = ["Not Yet Assigned Tutor", "Tutor Assigned but not yet Confirmed", "Tutor Confirmed , Deal Ongoing", "Tutor does not solve", "Client Side error", "Got Answer , Not payment not Done", "Payment Done Finally"];
+       
         $scope.data = items;
-        // $scope.copy = angular.copy(items);
+      
         console.log($scope.data);
 
-        $scope.users = [{ name: "Mohit Kushwaha", phone: "7338496008" }, { name: "abhishek kumar", phone: "7501384719" }];
-        // to input the status statusMsg
-        $scope.statusObj = MyNameSpace.helpers.getStatusName($scope.data.statusCode);
-        console.log($scope.statusObj);
-        //$scope.theme = $scope.statusObj.statusColor;
-        // $scope.statusMessageText = $scope.statusObj.statusMsg;
+
+        $scope.statusMessage = []
+        $scope.statusColor = "Orange"
+        $scope.statusObj = overalldata.dealStatus
+        angular.forEach($scope.statusObj , function(value,key){
+            $scope.statusMessage.push(value.status);
+            if(value.status == $scope.data.statusMsg){
+                $scope.statusColor = value.color
+            }
+        })
 
 
-        //  $scope.radioGroupModel = $scope.data.typeOfDeal[0].value;
+
+ 
         if ($scope.data.dealType == "Deadline Session") {
             $scope.radioGroupModel = false;
         } else {
@@ -712,6 +770,8 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                     if (!data.error) {
                         $mdDialog.cancel();
                         $scope.showSimpleToast("Your Deal is Edited Successfully");
+
+                        $rootScope.$broadcast('updateData');
                     }
                 })
                 .error(function(data, status, headers, config) {
