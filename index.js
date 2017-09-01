@@ -45,7 +45,7 @@ MyNameSpace.helpers = {
     }
 }
 
-var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs']);
+var app = angular.module('BlankApp', ['ngRoute', 'ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages', 'moment-picker', 'md.data.table','bsLoadingOverlay','bsLoadingOverlaySpinJs','ngCookies']);
 
 
 
@@ -84,11 +84,11 @@ app.config(function($mdThemingProvider) {
     $mdThemingProvider.theme('green')
         .primaryPalette('green');
 
-    $mdThemingProvider.theme('orange') 
+    $mdThemingProvider.theme('orange')
         .primaryPalette('orange');
 
     $mdThemingProvider.theme('pink')
-        .primaryPalette('pink');       
+        .primaryPalette('pink');
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
@@ -137,11 +137,11 @@ app.service("ViewAllDealsService", function($http, $q) {
 });
 
 app.service("viewDealOnDateService", function ($http, $q) {
-       
+
         this.viewDealonDay = function (inputdate) {
             var parameter = JSON.stringify({"date":inputdate});
             var deferred = $q.defer();
-            
+
             $http.post('http://ec2-52-54-173-224.compute-1.amazonaws.com:7200/api/snapQA/admin/viewDateSpecificDeals', parameter).then(
                 function success(data) {
                     deferred.resolve(data);
@@ -157,7 +157,7 @@ app.service("viewDealOnDateService", function ($http, $q) {
 
 
 
-app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http, $rootScope, GetOverallDataService, $route) {
+app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http, $rootScope, GetOverallDataService, $route , $timeout) {
 
 
     var overallData;
@@ -167,10 +167,14 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
     lookup.then(function(data) {
         $rootScope.raw_data = data.data;
         overallData = $rootScope.raw_data;
-    
+
         $scope.adminsName = overallData.adminList;
         $rootScope.examType = overallData.examType["ReportingLive"];
         $scope.subjectNameArray = overallData.subjectList;
+
+        $rootScope.subMap = $scope.getSubNameMap();
+
+        console.log($rootScope.subMap);
         //self.subjectNameArrayEx = $scope.subjectNameArray
         $scope.$watch('radioGroup', function(newVal, oldVal) {
 
@@ -195,6 +199,7 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
     $scope.reviewRequired = [];
     $scope.radioGroup = true;
 
+
     // function querySearch (query) {
     //   return query ? .subjectNameArray.filter( createFilterFor(query) ) : $scope.subjectNameArray;
     // }
@@ -208,7 +213,32 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
 
     // }
 
-   
+    $scope.getSubNameMap = function(){
+        return $scope.subjectNameArray.map(function (state) {
+        return {
+          value: state.toLowerCase(),
+          display: state
+        };
+        });
+        //console.log("coming here");
+        //console.log($scope.subjectNameArray);
+    }
+
+
+    $scope.querySearch = function (query) {
+      return query ? $rootScope.subMap.filter($scope.createFilterFor(query) ) : $rootScope.subMap;
+    }
+
+    $scope.createFilterFor = function(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(state) {
+        return (state.value.indexOf(lowercaseQuery) === 0);
+      };
+
+    }
+
+
 
     $scope.$watch('numberOfTutors', function(newVal, oldVal) {
         if (newVal != undefined) {
@@ -254,7 +284,7 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
                 }
             });
             addDataRequest.success(function(data, status, headers, config) {
-                    //                                
+                    //
                     // console.log(data);
                     $scope.loadProgressBarAddButton = false;
                     if (data.error != undefined) {
@@ -282,6 +312,8 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
 
     $scope.submit = function() {
 
+        $scope.obj.subjectName = $scope.selectedItem.display;
+        console.log($scope.obj);
         $scope.showConfirm();
         $scope.obj.numberOfTutors = $scope.numberOfTutors;
         $scope.obj.ratingArray = [];
@@ -296,7 +328,7 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
 
         $scope.obj.timeFrom = moment($scope.startTime).toISOString();
         $scope.obj.timeTo = moment($scope.endTime).toISOString();
-     
+
         if ($scope.obj.numberOfTutors == undefined) {
             $scope.obj.numberOfTutors = 0;
         }
@@ -304,8 +336,8 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
         $scope.obj.duration = $scope.duration.toString();
         $scope.obj.statusMsg = "Client didn't send the questions";
         //$scope.obj.statusCode = 100;
-        console.log($scope.obj);
-      
+
+
 
 
     };
@@ -319,15 +351,17 @@ app.controller('addDealsController', function($scope, $mdDialog, $mdToast, $http
 
 });
 
-app.controller('viewdealsController', function($scope, $http, $timeout, $rootScope, $mdDialog, ViewDealsService, ViewAllDealsService, GetOverallDataService,viewDealOnDateService,bsLoadingOverlayService) {
+app.controller('viewdealsController', function($scope, $http, $timeout, $rootScope,$cookies, $mdDialog, ViewDealsService, ViewAllDealsService, GetOverallDataService,viewDealOnDateService,bsLoadingOverlayService) {
 
 
-   
+
     $scope.show = false;
 
    // $scope.overallData = true;
     $scope.textAdd = " ";
-    
+
+    $scope.selected = [];
+
     $scope.changeView = function() {
         $scope.show = true;
     }
@@ -339,6 +373,8 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
     //$scope.myDate = new Date();
     $scope.getDate = function(){
         if($scope.myDate != undefined){
+            $cookies.put('date', $scope.myDate);
+            console.log($cookies.getAll());
             bsLoadingOverlayService.start();
             console.log($scope.myDate);
             $scope.newDateForApi = moment($scope.myDate).format('YYYY-MM-DD');
@@ -375,14 +411,14 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 }
                 $scope.statusColor = "orange"
                 angular.forEach(overallData.dealStatus , function(v , k){
-                     if(value.statusMsg != undefined){
+                    if(value.statusMsg != undefined){
                   if(v.status == value.statusMsg){
                     $scope.statusColor  = v.color
                     }
                 }
                 })
             value['statusColor'] = $scope.statusColor
-                
+
                 $rootScope.deadlineData.push(value);
 
                 //var dateMonthAsWord = moment("2014-02-27T10:00:00").format('DD-MMM-YYYY');
@@ -405,12 +441,12 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 $rootScope.liveSession.push(value);
             }
 
-           
+
 
             //value["numberOfTutors"] = value.ratingArray.length;
 
             //value["statusCode"] = value.statusCode;
-           
+
             // $scope.statusObj = MyNameSpace.helpers.getStatusName(value.statusCode);
             // value['statusColor'] = $scope.statusObj;
         });
@@ -421,27 +457,45 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
     }
 
 
-    var lookup = ViewAllDealsService.getService();
-    lookup.then(function(data) {
-        $rootScope.raw_data = data.data;
-       
-        $scope.copyOriginalData = angular.copy(data.data);
-        var overAlldata = GetOverallDataService.getService();
-        overAlldata.then(function(data) {
-            $rootScope.raw_overall_data = data.data;
-            $scope.dataSeperator($rootScope.raw_data , $rootScope.raw_overall_data);
-            console.log($rootScope.raw_overall_data);
+    var dateTokenSave = $cookies.get('date');
+    console.log(dateTokenSave);
+    //$cookieStore.put("Name", $scope.Name);
+    if(dateTokenSave == undefined){
+      var lookup = ViewAllDealsService.getService();
+      lookup.then(function(data) {
+          $rootScope.raw_data = data.data;
 
-        })
+          $scope.copyOriginalData = angular.copy(data.data);
+          var overAlldata = GetOverallDataService.getService();
+          overAlldata.then(function(data) {
+              $rootScope.raw_overall_data = data.data;
+              $scope.dataSeperator($rootScope.raw_data , $rootScope.raw_overall_data);
+              console.log($rootScope.raw_overall_data);
 
-    });
+          })
+
+      });
+  }
+  else{
+      var overAlldata = GetOverallDataService.getService();
+      overAlldata.then(function(data) {
+          $rootScope.raw_overall_data = data.data;
+          //$scope.dataSeperator($rootScope.raw_data , $rootScope.raw_overall_data);
+          //console.log($rootScope.raw_overall_data);
+
+      })
+      var d = new Date(dateTokenSave);
+      $scope.myDate = d;
+      $scope.getDate();
+
+  }
 
     $scope.$on("updateData",function(){
        // Post your code
         var lookup = ViewAllDealsService.getService();
         lookup.then(function(data) {
         $rootScope.raw_data = data.data;
-       
+
         $scope.copyOriginalData = angular.copy(data.data);
         var overAlldata = GetOverallDataService.getService();
         overAlldata.then(function(data) {
@@ -453,13 +507,13 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
         });
     });
-    
+
 
 
     //YY-MM-DD
-   
-                
-            
+
+
+
 
     $scope.query = {
         order: 'timeFrom',
@@ -553,7 +607,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         //$scope.statusMessage = ["Not Yet Assigned Tutor", "Tutor Assigned but not yet Confirmed", "Tutor Confirmed , Deal Ongoing", "Tutor does not solve", "Client Side error", "Got Answer , Not payment not Done", "Payment Done Finally"];
         $scope.data_deadline = items;
         $scope.data_deadline_copy = angular.copy($scope.data_deadline);
-       
+
 
         $scope.statusMessage = []
         $scope.statusColor = "Orange"
@@ -576,7 +630,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         }
 
         if ($scope.radioGroupModel) {
-            // reporting live 
+            // reporting live
             $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
 
         } else {
@@ -667,9 +721,9 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         $scope.adminsName = overalldata.adminList;
         $scope.subjectNameArray = overalldata.subjectList;
 
-       
+
         $scope.data = items;
-      
+
         console.log($scope.data);
 
 
@@ -685,7 +739,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
 
 
 
- 
+
         if ($scope.data.dealType == "Deadline Session") {
             $scope.radioGroupModel = false;
         } else {
@@ -693,7 +747,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
         }
 
         if ($scope.radioGroupModel) {
-            // reporting live 
+            // reporting live
             $scope.examTypePreFilled = overalldata.examType["ReportingLive"];
 
         } else {
@@ -712,18 +766,18 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
             }
         }, true);
 
-        $scope.startDate = moment($scope.data.timeFrom , moment.ISO_8601);
-        $scope.endTime = moment($scope.data.timeTo , moment.ISO_8601);
+        $scope.data.timeFrom = moment($scope.data.timeFrom , moment.ISO_8601);
+        $scope.data.timeTo = moment($scope.data.timeTo , moment.ISO_8601);
 
 
         //  $scope.$watch('data.numberOfTutor', function(newVal, oldVal){
         //     if(newVal != undefined){
-        //         console.log("change in value " + newVal);  
+        //         console.log("change in value " + newVal);
         //         $rootScope.numberOfReviewsTextBox = newVal;
         //         $scope.numberRev = newVal;
         //     }
         //     else{
-        //         console.log("change in value " + newVal); 
+        //         console.log("change in value " + newVal);
         //         $scope.numberRev = null;
         //     }
         // }, true);
@@ -790,10 +844,10 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
                 $rootScope.liveSession = angular.copy($rootScope.liveSessionCopy);
             } else {
                 $scope.loadProgressBar = true;
-                $scope.data.timeFrom = moment($scope.startTime).toISOString();
-                $scope.data.timeTo = moment($scope.endTime).toISOString();
-                $scope.data.timeFromFormat = moment($scope.startTime).format('DD-MM-YYYY HH:mm');
-                $scope.data.timeToFormat = moment($scope.endTime).format('DD-MM-YYYY HH:mm');
+                $scope.data.timeFrom = moment($scope.data.timeFrom).toISOString();
+                $scope.data.timeTo = moment($scope.data.timeTo).toISOString();
+                // $scope.data.timeFromFormat = moment($scope.startTime).format('DD-MM-YYYY HH:mm');
+                // $scope.data.timeToFormat = moment($scope.endTime).format('DD-MM-YYYY HH:mm');
                 $scope.editFormApiCall($scope.data);
             }
         };
@@ -802,7 +856,7 @@ app.controller('viewdealsController', function($scope, $http, $timeout, $rootSco
     // body...
 })
 
-app.controller('userratingController', function($scope, $http, $timeout, $rootScope, $mdDialog, GetOverallDataService) { 
+app.controller('userratingController', function($scope, $http, $timeout, $rootScope, $mdDialog, GetOverallDataService) {
 
     $scope.radiochoice = "nonrated";
 

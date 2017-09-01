@@ -49,9 +49,9 @@
               <div class="hint">Enter Course number</div>
         </md-input-container>
 
-        <md-autocomplete flex="40" md-items="subName in subjectNameArray" md-item-text="subName"  md-floating-label="Subject Name" md-selected-item="obj.subjectName" md-input-minlength="3" md-search-text="searchText">
+        <md-autocomplete  md-search-text="searchText"  md-selected-item="selectedItem" md-items="subName in querySearch(searchText)" flex="40" md-item-text="subName.display" md-input-minlength="1" md-floating-label="Subject Name">
            <md-item-template>
-            <span md-highlight-text="searchText">{{subName}}</span>
+            <span md-highlight-text="searchText">{{subName.display}}</span>
           </md-item-template>
           <md-not-found>
           No subject Found !! Ask Admin to add it

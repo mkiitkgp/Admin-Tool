@@ -55,7 +55,7 @@
     
 
           <md-table-container>
-  <table md-table >
+  <table md-table md-row-select multiple ng-model="selected">
     <thead md-head md-order="liveOrder">
       <tr md-row>
         <th md-column ><span>Status</span></th>
@@ -77,7 +77,7 @@
       </tr>
     </thead>
     <tbody md-body >
-      <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit">
+      <tr ng-click="showAdvancedLive($event,data)" md-row  ng-repeat="data in liveSession  | filter:liveSessionSearchText| orderBy:liveOrder| limitTo: query.limit : (query.page -1) * query.limit" md-select="data">
         <td md-cell><md-button class="md-icon-button">
           <md-tooltip>{{data.statusMsg}}</md-tooltip>
           <md-icon style="color:{{data.statusColor}};">stop</md-icon> 
